@@ -11,7 +11,12 @@
   },
   "dependencies": {
     "react": "18.2.0",
-    "react-native": "0.71.10"
+    "react-native": "0.71.10",
+    "react-native-camera": "^4.2.1",
+    "react-native-image-picker": "^5.4.2",
+    "react-native-permissions": "^3.8.0",
+    "react-native-qrcode-scanner": "^1.5.5",
+    "rn-qr-generator": "^1.3.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

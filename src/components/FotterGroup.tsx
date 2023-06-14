@@ -5,16 +5,81 @@ import {
   Text,
   Animated,
   PanResponder,
-  PanResponderGestureState,
   Alert,
+  PermissionsAndroid,
 } from 'react-native';
-import React, {useRef} from 'react';
+import React, {useRef, useState} from 'react';
 import Styles from '../ultils/Styles';
 import Constants from '../ultils/Constants';
 import FontSizes from '../ultils/FontSizes';
 import Colors from '../ultils/Colors';
 import {PanResponderInstance} from 'react-native';
+import RNQRGenerator from 'rn-qr-generator';
+import * as ImagePicker from 'react-native-image-picker';
 const FotterGroup = () => {
+  const [path, setPath]: any = useState(false);
+  const requestCameraPermission = async () => {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.CAMERA,
+        {
+          title: 'App Camera Permission',
+          message: 'App needs access to your camera ',
+          buttonNeutral: 'Ask Me Later',
+          buttonNegative: 'Cancel',
+          buttonPositive: 'OK',
+        },
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        console.log('Camera permission given');
+      } else {
+        console.log('Camera permission denied');
+      }
+    } catch (err) {
+      console.warn(err);
+    }
+  };
+
+  const takePicture = async () => {
+    await requestCameraPermission();
+    const options = {
+      maxWidth: 2000,
+      maxHeight: 2000,
+      storageOptions: {
+        skipBackup: true,
+        path: 'images',
+      },
+    };
+    // @ts-ignore
+    ImagePicker.launchCamera(options, (response: any) => {
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else if (response.customButton) {
+        console.log('User tapped custom button: ', response.customButton);
+      } else {
+        console.log(response);
+        const path = {uri: response.assets[0].uri};
+        setPath(path);
+
+        RNQRGenerator.detect({
+          uri: response.assets[0].uri,
+        })
+          .then(response => {
+            const {values} = response;
+            const message = values.join(', ');
+            if (message != null && message !== undefined && message != '') {
+              Alert.alert(message);
+            } else {
+              Alert.alert('False');
+            }
+          })
+          .catch(error => console.log('Cannot detect QR code in image', error));
+      }
+    });
+  };
+
   const pan = useRef(new Animated.ValueXY()).current;
 
   const panResponder = useRef(
@@ -28,10 +93,10 @@ const FotterGroup = () => {
       },
       onPanResponderMove: (_, gestureState) => {
         const x = (pan.x as any)._value;
-        if (x > 100 && x < 150) {
+        if (x > 100) {
           pan.x.setValue(0);
           pan.y.setValue(0);
-          Alert.alert('openCam');
+          takePicture();
           return;
         }
 
@@ -41,6 +106,8 @@ const FotterGroup = () => {
         }
       },
       onPanResponderRelease: () => {
+        pan.x.setValue(0);
+        pan.y.setValue(0);
         pan.flattenOffset();
       },
     }),
