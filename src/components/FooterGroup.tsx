@@ -12,11 +12,9 @@ import React, {useRef, useState} from 'react';
 import Styles from '../ultils/Styles';
 import Constants from '../ultils/Constants';
 import FontSizes from '../ultils/FontSizes';
-import Colors from '../ultils/Colors';
-import {PanResponderInstance} from 'react-native';
 import RNQRGenerator from 'rn-qr-generator';
 import * as ImagePicker from 'react-native-image-picker';
-const FotterGroup = () => {
+const FooterGroup = () => {
   const [path, setPath]: any = useState(false);
   const requestCameraPermission = async () => {
     try {
@@ -152,7 +150,7 @@ const FotterGroup = () => {
   );
 };
 
-export default FotterGroup;
+export default FooterGroup;
 
 const styles = StyleSheet.create({
   containerBottom: {
