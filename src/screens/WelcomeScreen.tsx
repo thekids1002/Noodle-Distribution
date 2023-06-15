@@ -76,7 +76,6 @@ const WelcomeScreen = ({navigation, route}: Props) => {
         console.log(response);
         const path = {uri: response.assets[0].uri};
         setPath(path);
-
         RNQRGenerator.detect({
           uri: response.assets[0].uri,
         })
@@ -108,9 +107,6 @@ const WelcomeScreen = ({navigation, route}: Props) => {
       onPanResponderMove: (_, gestureState) => {
         const x = (pan.x as any)._value;
         if (x > 100) {
-          pan.x.setValue(0);
-          pan.y.setValue(0);
-          takePicture();
           return;
         }
 
@@ -120,8 +116,12 @@ const WelcomeScreen = ({navigation, route}: Props) => {
         }
       },
       onPanResponderRelease: () => {
-        pan.x.setValue(0);
-        pan.y.setValue(0);
+        const x = (pan.x as any)._value;
+        if (x > 100) {
+          pan.x.setValue(0);
+          pan.y.setValue(0);
+          takePicture();
+        }
         pan.flattenOffset();
       },
     }),
