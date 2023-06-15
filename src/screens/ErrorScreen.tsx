@@ -20,6 +20,7 @@ import FooterGroup from '../components/FooterGroup';
 import RNQRGenerator from 'rn-qr-generator';
 import * as ImagePicker from 'react-native-image-picker';
 import FontSizes from '../ultils/FontSizes';
+import firestore from '@react-native-firebase/firestore';
 type PropsError = {
   navigation: any;
   route: any;
@@ -73,13 +74,42 @@ const ErrorScreen: React.FC<PropsError> = ({navigation, route}) => {
         RNQRGenerator.detect({
           uri: response.assets[0].uri,
         })
-          .then(response => {
+          .then(async response => {
             const {values} = response;
             const message = values.join(', ');
             if (message != null && message !== undefined && message != '') {
-              Alert.alert(message);
+              const userDocument = await firestore()
+                .collection('users')
+                .doc('' + message)
+                .get()
+                .then(data => {
+                  if (data.exists) {
+                    const rulesData = data.data();
+                    if (rulesData) {
+                      console.log(rulesData);
+                      Alert.alert(
+                        'Thông tin lấy dược từ firebase ',
+                        'Họ và tên : ' +
+                          rulesData.FullName +
+                          '\n' +
+                          'Ngày sinh : ' +
+                          rulesData.Birthday +
+                          '\n' +
+                          'Gender : ' +
+                          rulesData.Gender +
+                          '\n' +
+                          'Department : ' +
+                          rulesData.Department +
+                          '\n' +
+                          'Số numberNoodle : ' +
+                          rulesData.numberNoodle,
+                      );
+                    }
+                  }
+                })
+                .catch(e => console.log(e));
             } else {
-              navigation.replace('ErrorScanScreen');
+              // navigation.replace('ErrorScanScreen');
             }
           })
           .catch(error => console.log('Cannot detect QR code in image', error));
