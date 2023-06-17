@@ -104,12 +104,16 @@ const ErrorScreen: React.FC<PropsError> = ({navigation, route}) => {
                           'Số numberNoodle : ' +
                           rulesData.numberNoodle,
                       );
+                    } else {
+                      navigation.replace('ErrorScanScreen');
                     }
+                  } else {
+                    navigation.replace('ErrorScanScreen');
                   }
                 })
-                .catch(e => console.log(e));
+                .catch(e => console.log('Không tồn tại'));
             } else {
-              // navigation.replace('ErrorScanScreen');
+              navigation.replace('ErrorScanScreen');
             }
           })
           .catch(error => console.log('Cannot detect QR code in image', error));

@@ -109,12 +109,16 @@ const WelcomeScreen = ({navigation, route}: Props) => {
                           'Số numberNoodle : ' +
                           rulesData.numberNoodle,
                       );
+                    } else {
+                      navigation.navigate('ErrorScanScreen');
                     }
+                  } else {
+                    navigation.navigate('ErrorScanScreen');
                   }
                 })
-                .catch(e => console.log(e));
+                .catch(e => console.log('Không tồn tại'));
             } else {
-              navigation.replace('ErrorScanScreen');
+              navigation.navigate('ErrorScanScreen');
             }
           })
           .catch(error => console.log('Cannot detect QR code in image', error));
