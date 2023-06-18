@@ -10,19 +10,21 @@ import {
   PermissionsAndroid,
   Text,
 } from 'react-native';
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import Styles from '../ultils/Styles';
 import Background from '../components/Background';
 import HeaderGroup from '../components/HeaderGroup';
 import Colors from '../ultils/Colors';
 import Constants from '../ultils/Constants';
-import FooterGroup from '../components/FooterGroup';
 import RNQRGenerator from 'rn-qr-generator';
 import * as ImagePicker from 'react-native-image-picker';
 import FontSizes from '../ultils/FontSizes';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {RootStackParams} from '../navigations/RootStackParam';
-import firestore from '@react-native-firebase/firestore';
+import {useDispatch, useSelector} from 'react-redux';
+import {RootState} from '../app/store';
+import {fetchUser} from '../features/user/userSlice';
+import {Action, ThunkDispatch} from '@reduxjs/toolkit';
 type Props = NativeStackScreenProps<RootStackParams, 'WelcomeScreen'>;
 
 type WellComeProps = {
@@ -30,8 +32,28 @@ type WellComeProps = {
   router: any;
 };
 
+interface User {
+  FullName: any;
+  Birthday: any;
+  Gender: any;
+  Department: any;
+  numberNoodle: any;
+  //   Image: any;
+}
+
 const WelcomeScreen = ({navigation, route}: Props) => {
+  const [dummy, setDummy] = useState<User | undefined>();
+
   const [path, setPath]: any = useState(false);
+
+  const dispatch = useDispatch<ThunkDispatch<RootState, any, Action>>();
+
+  const user = useSelector((state: RootState) => state.user.user);
+
+  const handleFetchUser = async (userId: string) => {
+    await dispatch(fetchUser(userId));
+  };
+
   const requestCameraPermission = async () => {
     try {
       const granted = await PermissionsAndroid.request(
@@ -83,40 +105,7 @@ const WelcomeScreen = ({navigation, route}: Props) => {
             const {values} = response;
             const message = values.join(', ');
             if (message != null && message !== undefined && message != '') {
-              const userDocument = await firestore()
-                .collection('users')
-                .doc('' + message)
-                .get()
-                .then(data => {
-                  if (data.exists) {
-                    const rulesData = data.data();
-                    if (rulesData) {
-                      console.log(rulesData);
-                      Alert.alert(
-                        'Thông tin lấy dược từ firebase ',
-                        'Họ và tên : ' +
-                          rulesData.FullName +
-                          '\n' +
-                          'Ngày sinh : ' +
-                          rulesData.Birthday +
-                          '\n' +
-                          'Gender : ' +
-                          rulesData.Gender +
-                          '\n' +
-                          'Department : ' +
-                          rulesData.Department +
-                          '\n' +
-                          'Số numberNoodle : ' +
-                          rulesData.numberNoodle,
-                      );
-                    } else {
-                      navigation.navigate('ErrorScanScreen');
-                    }
-                  } else {
-                    navigation.navigate('ErrorScanScreen');
-                  }
-                })
-                .catch(e => console.log('Không tồn tại'));
+              await handleFetchUser(message);
             } else {
               navigation.navigate('ErrorScanScreen');
             }
@@ -125,6 +114,15 @@ const WelcomeScreen = ({navigation, route}: Props) => {
       }
     });
   };
+  
+  useEffect(() => {
+    if (user) {
+      navigation.navigate('HomeScreen');
+    }
+    if (user === null) {
+      navigation.navigate('ErrorScanScreen');
+    }
+  }, [user]);
 
   const pan = useRef(new Animated.ValueXY()).current;
 
