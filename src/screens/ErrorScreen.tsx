@@ -10,7 +10,7 @@ import {
   PermissionsAndroid,
   Alert,
 } from 'react-native';
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import Styles from '../ultils/Styles';
 import Colors from '../ultils/Colors';
 import Background from '../components/Background';
@@ -21,11 +21,23 @@ import RNQRGenerator from 'rn-qr-generator';
 import * as ImagePicker from 'react-native-image-picker';
 import FontSizes from '../ultils/FontSizes';
 import firestore from '@react-native-firebase/firestore';
+import {useDispatch, useSelector} from 'react-redux';
+import {RootState} from '../app/store';
+import {Action, ThunkDispatch} from '@reduxjs/toolkit';
+import {fetchUser} from '../features/user/userSlice';
 type PropsError = {
   navigation: any;
   route: any;
 };
 const ErrorScreen: React.FC<PropsError> = ({navigation, route}) => {
+  const dispatch = useDispatch<ThunkDispatch<RootState, any, Action>>();
+
+  const user = useSelector((state: RootState) => state.user.user);
+
+  const handleFetchUser = async (userId: string) => {
+    await dispatch(fetchUser(userId));
+  };
+
   const [path, setPath]: any = useState(false);
   const requestCameraPermission = async () => {
     try {
@@ -78,48 +90,24 @@ const ErrorScreen: React.FC<PropsError> = ({navigation, route}) => {
             const {values} = response;
             const message = values.join(', ');
             if (message != null && message !== undefined && message != '') {
-              const userDocument = await firestore()
-                .collection('users')
-                .doc('' + message)
-                .get()
-                .then(data => {
-                  if (data.exists) {
-                    const rulesData = data.data();
-                    if (rulesData) {
-                      console.log(rulesData);
-                      Alert.alert(
-                        'Thông tin lấy dược từ firebase ',
-                        'Họ và tên : ' +
-                          rulesData.FullName +
-                          '\n' +
-                          'Ngày sinh : ' +
-                          rulesData.Birthday +
-                          '\n' +
-                          'Gender : ' +
-                          rulesData.Gender +
-                          '\n' +
-                          'Department : ' +
-                          rulesData.Department +
-                          '\n' +
-                          'Số numberNoodle : ' +
-                          rulesData.numberNoodle,
-                      );
-                    } else {
-                      navigation.replace('ErrorScanScreen');
-                    }
-                  } else {
-                    navigation.replace('ErrorScanScreen');
-                  }
-                })
-                .catch(e => console.log('Không tồn tại'));
+              await handleFetchUser(message);
             } else {
-              navigation.replace('ErrorScanScreen');
+              // navigation.replace('ErrorScanScreen');
             }
           })
           .catch(error => console.log('Cannot detect QR code in image', error));
       }
     });
   };
+
+  useEffect(() => {
+    if (user) {
+      navigation.replace('HomeScreen');
+    }
+    if (user === null) {
+      //  navigation.navigate('ErrorScanScreen');
+    }
+  }, [user]);
 
   const pan = useRef(new Animated.ValueXY()).current;
 

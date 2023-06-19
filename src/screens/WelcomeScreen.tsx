@@ -25,6 +25,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '../app/store';
 import {fetchUser} from '../features/user/userSlice';
 import {Action, ThunkDispatch} from '@reduxjs/toolkit';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 type Props = NativeStackScreenProps<RootStackParams, 'WelcomeScreen'>;
 
 type WellComeProps = {
@@ -42,13 +43,9 @@ interface User {
 }
 
 const WelcomeScreen = ({navigation, route}: Props) => {
-  const [dummy, setDummy] = useState<User | undefined>();
-
   const [path, setPath]: any = useState(false);
-
-  const dispatch = useDispatch<ThunkDispatch<RootState, any, Action>>();
-
   const user = useSelector((state: RootState) => state.user.user);
+  const dispatch = useDispatch<ThunkDispatch<RootState, any, Action>>();
 
   const handleFetchUser = async (userId: string) => {
     await dispatch(fetchUser(userId));
@@ -107,20 +104,38 @@ const WelcomeScreen = ({navigation, route}: Props) => {
             if (message != null && message !== undefined && message != '') {
               await handleFetchUser(message);
             } else {
-              navigation.navigate('ErrorScanScreen');
+              navigation.replace('ErrorScanScreen');
             }
           })
           .catch(error => console.log('Cannot detect QR code in image', error));
       }
     });
   };
-  
+
   useEffect(() => {
+    const getData = async () => {
+      try {
+        const value = await AsyncStorage.getItem('@storage_Key');
+        if (value !== null) {
+          navigation.replace('HomeScreen');
+        }
+      } catch (e) {}
+    };
+    getData();
     if (user) {
-      navigation.navigate('HomeScreen');
+      const storeData = async (value: string) => {
+        try {
+          await AsyncStorage.setItem('@storage_Key', value);
+        } catch (e) {
+          // saving error
+        }
+      };
+      storeData(user.UID);
+      console.log(user.UID);
+      navigation.replace('HomeScreen');
     }
     if (user === null) {
-      navigation.navigate('ErrorScanScreen');
+      navigation.replace('ErrorScanScreen');
     }
   }, [user]);
 

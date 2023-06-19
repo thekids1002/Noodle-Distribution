@@ -7,12 +7,13 @@ import {
 } from '@reduxjs/toolkit';
 
 interface User {
+  UID: any;
   FullName: any;
   Birthday: any;
   Gender: any;
   Department: any;
   numberNoodle: any;
-  //   Image: any;
+  Image: any;
 }
 
 interface userState {
@@ -37,7 +38,7 @@ export const fetchUser = createAsyncThunk(
       .then(snapshot => {
         const data: User | null =
           (snapshot.exists && (snapshot.data() as User)) || null;
-        console.log(data);
+
         return data;
       });
     const data = await userDocument;
@@ -57,12 +58,10 @@ const userSlice = createSlice({
     builder
       .addCase(fetchUser.pending, state => {
         state.status = 'loading';
-        console.log('State loading' + state.user);
       })
       .addCase(fetchUser.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.user = action.payload;
-        console.log('State fulfilled' + state.user);
       })
       .addCase(fetchUser.rejected, (state, action) => {
         state.status = 'failed';
