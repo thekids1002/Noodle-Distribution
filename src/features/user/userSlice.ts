@@ -1,3 +1,7 @@
+// Định nghĩa slice quản lý trạng thái của người dùng
+// Bao gồm thông tin về người dùng như UID, họ tên, ngày sinh, giới tính, phòng ban, số mì tương ứng và hình ảnh.
+// Slice bao gồm một trạng thái ban đầu cho người dùng là không xác định và trạng thái của slice có thể là idle, loading, succeeded hoặc failed.
+// Slice bao gồm một action để thiết lập thông tin người dùng và một async action để lấy thông tin người dùng từ tài liệu Firestore
 import firestore from '@react-native-firebase/firestore';
 import {
   createSlice,
