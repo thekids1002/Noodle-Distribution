@@ -50,6 +50,21 @@ export const fetchUser = createAsyncThunk(
   },
 );
 
+export const setNumberNoodle = createAsyncThunk(
+  'user/setNumberNoodle',
+  async ({message, numberNoodle}: {message: string; numberNoodle: number}) => {
+    firestore()
+      .collection('users')
+      .doc(message)
+      .update({
+        numberNoodle: numberNoodle,
+      })
+      .then(() => {
+        console.log('User updated!');
+      });
+  },
+);
+
 const userSlice = createSlice({
   name: 'user',
   initialState,
@@ -68,6 +83,17 @@ const userSlice = createSlice({
         state.user = action.payload;
       })
       .addCase(fetchUser.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.error.message ?? 'Something went wrong.';
+      })
+
+      .addCase(setNumberNoodle.pending, state => {
+        state.status = 'loading';
+      })
+      .addCase(setNumberNoodle.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+      })
+      .addCase(setNumberNoodle.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.error.message ?? 'Something went wrong.';
       });

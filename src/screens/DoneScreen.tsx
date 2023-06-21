@@ -13,14 +13,16 @@ import Styles from '../ultils/Styles';
 import Colors from '../ultils/Colors';
 import Constants from '../ultils/Constants';
 import FontSizes from '../ultils/FontSizes';
-
-const DoneScreen = ({}) => {
+type Props = {
+  navigation: any;
+  route: any;
+};
+const DoneScreen: React.FC<Props> = ({navigation, route}) => {
   return (
     <View style={Styles.container}>
       <StatusBar backgroundColor={Colors.BLACK} />
       <Background />
       <HeaderGroup />
-
       <View style={{flex: 4}}>
         <Image
           resizeMode="stretch"
@@ -31,7 +33,6 @@ const DoneScreen = ({}) => {
             alignSelf: 'center',
           }}
         />
-
         <Text
           style={[
             Styles.textWhite,
@@ -42,7 +43,11 @@ const DoneScreen = ({}) => {
           Enjoy your noodles ;)
         </Text>
 
-        <TouchableOpacity activeOpacity={0.8} onPress={() => {}}>
+        <TouchableOpacity
+          activeOpacity={0.8}
+          onPress={() => {
+            navigation.replace('HomeScreen');
+          }}>
           <Image
             source={Constants.BTN_BACK_TO_HOME}
             style={{

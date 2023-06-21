@@ -8,7 +8,10 @@ const store = configureStore({
   reducer: {
     user: userSlice,
   },
-  middleware: getDefaultMiddleware => [...getDefaultMiddleware(), thunk],
+  middleware: getDefaultMiddleware => [
+    ...getDefaultMiddleware({immutableCheck: false, serializableCheck: false}),
+    thunk,
+  ],
 });
 
 export type RootState = ReturnType<typeof store.getState>;

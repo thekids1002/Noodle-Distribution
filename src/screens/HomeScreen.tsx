@@ -1,4 +1,5 @@
 import {
+  Alert,
   Image,
   StatusBar,
   StyleSheet,
@@ -17,7 +18,7 @@ import Colors from '../ultils/Colors';
 import InfomationBox from '../components/InfomationBox';
 import {Action, ThunkDispatch} from '@reduxjs/toolkit';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {fetchUser} from '../features/user/userSlice';
+import {fetchUser, setNumberNoodle} from '../features/user/userSlice';
 type Props = {
   navigation: any;
   route: any;
@@ -34,24 +35,25 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
   const [gender, setGender] = useState('loading...');
   const [department, setDepartment] = useState('loading...');
   const dispatch = useDispatch<ThunkDispatch<RootState, any, Action>>();
+  const [cup1, setcup1] = useState(false);
+  const [cup2, setcup2] = useState(false);
+  const [cup3, setcup3] = useState(false);
 
   useEffect(() => {
-    const getData = async () => {
-      try {
-        const value = await AsyncStorage.getItem('@storage_Key');
-        if (value !== null) {
-          // value previously stored
-          dispatch(fetchUser(value));
-        }
-      } catch (e) {
-        // error reading value
+    const fetchData = async () => {
+      const value = await AsyncStorage.getItem('@storage_Key');
+      if (value) {
+        dispatch(fetchUser(value));
       }
     };
-    getData();
+    fetchData();
+  });
+
+  useEffect(() => {
     if (user?.numberNoodle <= 0) {
       navigation.replace('OutOfNoodleScreen');
     }
-  }, [user]);
+  }, [user, navigation]);
 
   return (
     <View style={Styles.container}>
@@ -60,7 +62,7 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
       <HeaderGroup title={Constants.INFOMATION_IMG} titleWidth={260} />
 
       <View style={{flex: 1, paddingHorizontal: 24}}>
-        <TouchableOpacity>
+        <View>
           <InfomationBox
             avatar={
               'https://firebasestorage.googleapis.com/v0/b/noodle-41cfb.appspot.com/o/' +
@@ -72,15 +74,80 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
             gender={user?.Gender}
             department={user?.Department}
           />
-        </TouchableOpacity>
+        </View>
+      </View>
 
+      <View style={{flex: 1.7}}>
         <View
           style={[
             Styles.row,
             Styles.alignItemsCenter,
             Styles.justifyContentBetween,
             {marginTop: 15},
-          ]}></View>
+          ]}>
+          <TouchableOpacity
+            activeOpacity={1}
+            onPress={() => {
+              setcup1(!cup1);
+              console.log(JSON.stringify(user));
+            }}>
+            <Image
+              source={
+                user?.numberNoodle > 0
+                  ? require('../assets/cup1.png')
+                  : require('../assets/unviliblae.png')
+              }
+              style={styles.cupNoodle}
+            />
+
+            {cup1 && (
+              <Image
+                source={require('../assets/checked.png')}
+                style={styles.cupNoodle_Checked}
+              />
+            )}
+          </TouchableOpacity>
+          <TouchableOpacity
+            activeOpacity={1}
+            onPress={() => {
+              setcup2(!cup2);
+            }}>
+            <Image
+              source={
+                user?.numberNoodle > 1
+                  ? require('../assets/cup2.png')
+                  : require('../assets/unviliblae.png')
+              }
+              style={styles.cupNoodle}
+            />
+            {cup2 && (
+              <Image
+                source={require('../assets/checked.png')}
+                style={styles.cupNoodle_Checked}
+              />
+            )}
+          </TouchableOpacity>
+          <TouchableOpacity
+            activeOpacity={1}
+            onPress={() => {
+              setcup3(!cup3);
+            }}>
+            <Image
+              source={
+                user?.numberNoodle > 1
+                  ? require('../assets/cup3.png')
+                  : require('../assets/unviliblae.png')
+              }
+              style={styles.cupNoodle}
+            />
+            {cup3 && (
+              <Image
+                source={require('../assets/checked.png')}
+                style={styles.cupNoodle_Checked}
+              />
+            )}
+          </TouchableOpacity>
+        </View>
         <Image
           source={Constants.THREE_CUP_OF_NOODLES_LEFT_THIS_MONTH}
           style={{
@@ -91,7 +158,25 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
         />
         <TouchableOpacity
           activeOpacity={0.8}
-          onPress={() => navigation.navigate('DoneScreens')}>
+          onPress={() => {
+            let count = 0;
+            if (cup1) {
+              count++;
+            }
+            if (cup2) {
+              count++;
+            }
+            if (cup3) {
+              count++;
+            }
+            dispatch(
+              setNumberNoodle({
+                message: user?.UID,
+                numberNoodle: user?.numberNoodle - count,
+              }),
+            );
+            navigation.replace('DoneScreens');
+          }}>
           <Image
             source={Constants.BTN_GET_NOODLES}
             style={{
@@ -101,12 +186,25 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
           />
         </TouchableOpacity>
       </View>
-
-      <View style={{flex: 1.5}}></View>
     </View>
   );
 };
 
 export default HomeScreen;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  cupNoodle: {
+    marginTop: 0,
+    width: 100,
+    height: 100,
+    resizeMode: 'contain',
+  },
+  cupNoodle_Checked: {
+    position: 'absolute',
+    resizeMode: 'contain',
+    width: 100,
+    height: 85,
+    zIndex: -2,
+    paddingBottom: -10,
+  },
+});
