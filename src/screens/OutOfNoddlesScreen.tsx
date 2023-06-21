@@ -14,11 +14,11 @@ const OutOfNoddlesScreen = () => {
       <HeaderGroup title={Constants.OUT_OF_NOODLES_IMG} titleWidth={260} />
 
       <View style={[Styles.alignItemsCenter, {flex: 1}]}>
-        <Text style={[Styles.textWhite, styles.alert]}>
+        <Text style={[Styles.textOutCup, styles.alert]}>
           There is
           <Text
             style={{
-              color: '#ff3334',
+              color: '#ffffff',
               fontSize: 20,
               fontWeight: '900',
             }}>
@@ -54,22 +54,22 @@ const styles = StyleSheet.create({
   cups: {
     flexDirection: 'row',
     justifyContent: 'center',
-    alignItems: 'flex-end',
+    alignItems: 'center',
     position: 'absolute',
-    top: 370,
+    top: 270,
     left: 0,
     right: 0,
   },
   noodleCup: {
-    width: 156 / 2,
+    width: 100 / 2,
     height: 271 / 2,
-    resizeMode: 'stretch',
+    resizeMode: 'contain',
     marginBottom: 30,
     marginHorizontal: 8,
   },
   noodleCupLarge: {
-    width: 110,
+    width: 75,
     height: 200,
-    resizeMode: 'stretch',
+    resizeMode: 'contain',
   },
 });

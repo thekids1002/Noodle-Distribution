@@ -49,11 +49,11 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
     fetchData();
   });
 
-  useEffect(() => {
-    if (user?.numberNoodle <= 0) {
-      navigation.replace('OutOfNoodleScreen');
-    }
-  }, [user, navigation]);
+  // useEffect(() => {
+  //   if (user?.numberNoodle <= 0) {
+  //     navigation.replace('OutOfNoodleScreen');
+  //   }
+  // }, [user, navigation]);
 
   return (
     <View style={Styles.container}>
@@ -100,7 +100,7 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
               style={styles.cupNoodle}
             />
 
-            {cup1 && (
+            {cup1 && user?.numberNoodle > 0 && (
               <Image
                 source={require('../assets/checked.png')}
                 style={styles.cupNoodle_Checked}
@@ -120,7 +120,7 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
               }
               style={styles.cupNoodle}
             />
-            {cup2 && (
+            {cup2 && user?.numberNoodle > 1 && (
               <Image
                 source={require('../assets/checked.png')}
                 style={styles.cupNoodle_Checked}
@@ -134,13 +134,13 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
             }}>
             <Image
               source={
-                user?.numberNoodle > 1
+                user?.numberNoodle > 2
                   ? require('../assets/cup3.png')
                   : require('../assets/unviliblae.png')
               }
               style={styles.cupNoodle}
             />
-            {cup3 && (
+            {cup3 && user?.numberNoodle > 2 && (
               <Image
                 source={require('../assets/checked.png')}
                 style={styles.cupNoodle_Checked}
@@ -159,23 +159,27 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
         <TouchableOpacity
           activeOpacity={0.8}
           onPress={() => {
-            let count = 0;
-            if (cup1) {
-              count++;
+            if (user?.numberNoodle > 0) {
+              let count = 0;
+              if (cup1) {
+                count++;
+              }
+              if (cup2) {
+                count++;
+              }
+              if (cup3) {
+                count++;
+              }
+              dispatch(
+                setNumberNoodle({
+                  message: user?.UID,
+                  numberNoodle: user?.numberNoodle - count,
+                }),
+              );
+              navigation.replace('DoneScreens');
+            } else if (user?.numberNoodle <= 0) {
+              navigation.replace('OutOfNoodleScreen');
             }
-            if (cup2) {
-              count++;
-            }
-            if (cup3) {
-              count++;
-            }
-            dispatch(
-              setNumberNoodle({
-                message: user?.UID,
-                numberNoodle: user?.numberNoodle - count,
-              }),
-            );
-            navigation.replace('DoneScreens');
           }}>
           <Image
             source={Constants.BTN_GET_NOODLES}

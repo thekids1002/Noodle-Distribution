@@ -41,6 +41,9 @@ const Styles = StyleSheet.create({
   textWhite: {
     color: '#fff',
   },
+  textOutCup: {
+    color: '#980000',
+  },
 });
 
 export default Styles;
