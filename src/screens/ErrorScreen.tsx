@@ -25,6 +25,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '../app/store';
 import {Action, ThunkDispatch} from '@reduxjs/toolkit';
 import {fetchUser} from '../features/user/userSlice';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 type PropsError = {
   navigation: any;
   route: any;
@@ -101,11 +102,29 @@ const ErrorScreen: React.FC<PropsError> = ({navigation, route}) => {
   };
 
   useEffect(() => {
+    const getData = async () => {
+      try {
+        const value = await AsyncStorage.getItem('@storage_Key');
+        if (value !== null) {
+          navigation.replace('HomeScreen');
+        }
+      } catch (e) {}
+    };
+    getData();
     if (user) {
+      const storeData = async (value: string) => {
+        try {
+          await AsyncStorage.setItem('@storage_Key', value);
+        } catch (e) {
+          // saving error
+        }
+      };
+      storeData(user.UID);
+      console.log(user.UID);
       navigation.replace('HomeScreen');
     }
     if (user === null) {
-      //  navigation.navigate('ErrorScanScreen');
+      navigation.replace('ErrorScanScreen');
     }
   }, [user]);
 

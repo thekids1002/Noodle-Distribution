@@ -33,15 +33,22 @@ const DoneScreen: React.FC<Props> = ({navigation, route}) => {
             alignSelf: 'center',
           }}
         />
-        <Text
+        <Image
+          source={require('../assets/enjoynoodle.png')}
+          resizeMode="contain"
           style={[
-            Styles.textWhite,
-            Styles.textCenter,
-            Styles.textBold,
-            {marginTop: 30, fontSize: 30},
-          ]}>
-          Enjoy your noodles ;)
-        </Text>
+            {
+              marginTop: 30,
+              width: 200,
+              height: 50,
+              alignItems: 'center',
+              justifyContent: 'center',
+              alignSelf: 'center',
+              alignContent: 'center',
+              resizeMode: 'contain',
+            },
+          ]}
+        />
 
         <TouchableOpacity
           activeOpacity={0.8}
@@ -55,6 +62,9 @@ const DoneScreen: React.FC<Props> = ({navigation, route}) => {
               width: '70%',
               height: 50,
               alignSelf: 'center',
+              alignItems: 'center',
+              alignContent: 'center',
+              justifyContent: 'center',
               resizeMode: 'stretch',
             }}
           />
@@ -65,7 +75,7 @@ const DoneScreen: React.FC<Props> = ({navigation, route}) => {
             Styles.textCenter,
             Styles.textBold,
             FontSizes.h3,
-            {color: Colors.BLUE, marginTop: 20},
+            {color: '#F8C135', marginTop: 20},
           ]}>
           Get them below
         </Text>

@@ -170,13 +170,17 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
               if (cup3) {
                 count++;
               }
-              dispatch(
-                setNumberNoodle({
-                  message: user?.UID,
-                  numberNoodle: user?.numberNoodle - count,
-                }),
-              );
-              navigation.replace('DoneScreens');
+              if (count > 0) {
+                dispatch(
+                  setNumberNoodle({
+                    message: user?.UID,
+                    numberNoodle: user?.numberNoodle - count,
+                  }),
+                );
+                navigation.replace('DoneScreens');
+              } else {
+                Alert.alert('Bạn chưa chọn ly mỳ nào');
+              }
             } else if (user?.numberNoodle <= 0) {
               navigation.replace('OutOfNoodleScreen');
             }
