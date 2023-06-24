@@ -22,14 +22,15 @@ const DoneScreen: React.FC<Props> = ({navigation, route}) => {
     <View style={Styles.container}>
       <StatusBar backgroundColor={Colors.BLACK} />
       <Background />
-      <HeaderGroup />
+      <HeaderGroup title={'DONE'} />
       <View style={{flex: 4}}>
         <Image
-          resizeMode="stretch"
+          resizeMode="contain"
           source={Constants.DONE_IMG}
           style={{
+            marginTop: 75,
             width: 200,
-            height: 275,
+            height: 200,
             alignSelf: 'center',
           }}
         />

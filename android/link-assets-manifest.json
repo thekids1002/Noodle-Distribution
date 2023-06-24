@@ -1,0 +1,17 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "assets/fonts/c.ttf",
+      "sha1": "9f82fa9d9d2a2d4cdc56c79538ecd5c85a83c95f"
+    },
+    {
+      "path": "assets/fonts/Nexa-Rust.ttf",
+      "sha1": "9f82fa9d9d2a2d4cdc56c79538ecd5c85a83c95f"
+    },
+    {
+      "path": "assets/fonts/Roboto-Bold.ttf",
+      "sha1": "62442a18a9fe9457c1afeabf683d263a691b7798"
+    }
+  ]
+}

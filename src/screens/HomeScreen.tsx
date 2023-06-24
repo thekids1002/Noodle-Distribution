@@ -59,7 +59,7 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
     <View style={Styles.container}>
       <StatusBar backgroundColor={Colors.BLACK} />
       <Background />
-      <HeaderGroup title={Constants.INFOMATION_IMG} titleWidth={260} />
+      <HeaderGroup title={'Infomation'} titleWidth={260} />
 
       <View style={{flex: 1, paddingHorizontal: 24}}>
         <View>
@@ -148,14 +148,32 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
             )}
           </TouchableOpacity>
         </View>
-        <Image
-          source={Constants.THREE_CUP_OF_NOODLES_LEFT_THIS_MONTH}
+        <Text
           style={{
-            marginTop: 5,
+            marginTop: 0,
             alignSelf: 'center',
-            resizeMode: 'center',
-          }}
-        />
+            fontSize: 10,
+            fontWeight: 'bold',
+          }}>
+          <Text
+            style={{
+              color: 'yellow',
+              fontWeight: 'bold',
+              fontSize: 15,
+            }}>
+            {user?.numberNoodle}
+          </Text>
+          <Text
+            style={{
+              color: 'red',
+              fontWeight: 'bold',
+              fontFamily: 'Roboto-Bold',
+            }}>
+            {' '}
+            cups of noodles left this month
+          </Text>
+        </Text>
+
         <TouchableOpacity
           activeOpacity={0.8}
           onPress={() => {

@@ -176,7 +176,7 @@ const WelcomeScreen = ({navigation, route}: Props) => {
     <View style={Styles.container}>
       <StatusBar backgroundColor={Colors.BLACK} />
       <Background />
-      <HeaderGroup title={Constants.WELCOME_IMG} />
+      <HeaderGroup title={'welcome'} />
 
       <ImageBackground
         style={{marginLeft: 43, width: 285, height: 170, paddingTop: 2}}

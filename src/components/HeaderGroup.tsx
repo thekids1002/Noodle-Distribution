@@ -1,4 +1,4 @@
-import {Image, StyleSheet, View} from 'react-native';
+import {Image, StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import Constants from '../ultils/Constants';
 
@@ -10,10 +10,18 @@ const HeaderGroup: React.FC<headerGroupProps> = ({title, titleWidth}) => {
   return (
     <View style={styles.headerGroup}>
       <Image source={Constants.LOGO_IMG} style={styles.logo} />
-      <Image
-        style={[styles.title, {width: titleWidth ? titleWidth : 140}]}
-        source={title}
-      />
+      <Text
+        style={[
+          styles.title,
+          {
+            fontFamily: 'Nexa-Rust',
+            color: '#C71A1A',
+            fontSize: 30,
+            textAlign: 'center',
+          },
+        ]}>
+        {title}
+      </Text>
     </View>
   );
 };
@@ -34,8 +42,11 @@ const styles = StyleSheet.create({
     marginTop: 0,
   },
   title: {
-    width: 140,
-    height: 35,
-    resizeMode: 'stretch',
+    width: 259,
+    height: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 0,
+    margin: 0,
   },
 });

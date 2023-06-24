@@ -165,7 +165,7 @@ const ErrorScreen: React.FC<PropsError> = ({navigation, route}) => {
     <View style={Styles.container}>
       <StatusBar backgroundColor={Colors.BLACK} />
       <Background />
-      <HeaderGroup title={Constants.ERROR_IMG} />
+      <HeaderGroup title={'error'} />
 
       <View style={[Styles.alignItemsCenter, {flex: 1, marginTop: -35}]}>
         <Text style={[Styles.textWhite, styles.alert]}>
