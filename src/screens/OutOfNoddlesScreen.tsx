@@ -11,7 +11,7 @@ const OutOfNoddlesScreen = () => {
     <View style={Styles.container}>
       <StatusBar backgroundColor={Colors.BLACK} />
       <Background />
-      <HeaderGroup title={Constants.OUT_OF_NOODLES_IMG} titleWidth={260} />
+      <HeaderGroup title={''} titleWidth={260} />
 
       <View style={[Styles.alignItemsCenter, {flex: 1}]}>
         <Text style={[Styles.textOutCup, styles.alert]}>
