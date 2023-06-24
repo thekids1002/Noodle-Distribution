@@ -19,17 +19,17 @@ const InfomationBox: React.FC<InformationBoxProps> = ({
   gender,
   department,
 }) => {
-  // Component implementation
   return (
     <View style={styles.infomationBox}>
       <ImageBackground
-        resizeMode="contain"
+        resizeMode="stretch"
         style={{
           flexDirection: 'row',
           width: '100%',
           height: '100%',
-          paddingTop: 2,
           alignItems: 'center',
+          margin: 0,
+          padding: 0,
         }}
         source={require('../assets/bg_info.png')}>
         <View style={[Styles.alignItemsCenter, {marginHorizontal: 20}]}>
@@ -108,12 +108,17 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     width: '100%',
     height: '100%',
+    marginTop: '-5%',
   },
   circleAvatar: {
     width: 90,
     height: 90,
     borderRadius: 500,
     resizeMode: 'cover',
+    alignContent: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 3.3,
   },
   infomationText: {
     color: '#880B0B',

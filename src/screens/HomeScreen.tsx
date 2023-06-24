@@ -49,19 +49,17 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
     fetchData();
   });
 
-  // useEffect(() => {
-  //   if (user?.numberNoodle <= 0) {
-  //     navigation.replace('OutOfNoodleScreen');
-  //   }
-  // }, [user, navigation]);
-
   return (
     <View style={Styles.container}>
       <StatusBar backgroundColor={Colors.BLACK} />
       <Background />
       <HeaderGroup title={'Infomation'} titleWidth={260} />
 
-      <View style={{flex: 1, paddingHorizontal: 24}}>
+      <View
+        style={{
+          flex: 1,
+          paddingHorizontal: 24,
+        }}>
         <View>
           <InfomationBox
             avatar={
@@ -77,19 +75,24 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
         </View>
       </View>
 
-      <View style={{flex: 1.7}}>
+      <View style={{flex: 2, top: -40}}>
         <View
           style={[
             Styles.row,
             Styles.alignItemsCenter,
-            Styles.justifyContentBetween,
-            {marginTop: 15},
+            Styles.justifyContentCenter,
+            {
+              marginTop: '5%',
+            },
           ]}>
           <TouchableOpacity
             activeOpacity={1}
+            style={{
+              width: 110,
+              height: 150,
+            }}
             onPress={() => {
               setcup1(!cup1);
-              console.log(JSON.stringify(user));
             }}>
             <Image
               source={
@@ -109,6 +112,10 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
           </TouchableOpacity>
           <TouchableOpacity
             activeOpacity={1}
+            style={{
+              width: 110,
+              height: 150,
+            }}
             onPress={() => {
               setcup2(!cup2);
             }}>
@@ -129,6 +136,10 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
           </TouchableOpacity>
           <TouchableOpacity
             activeOpacity={1}
+            style={{
+              width: 110,
+              height: 150,
+            }}
             onPress={() => {
               setcup3(!cup3);
             }}>
@@ -157,17 +168,18 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
           }}>
           <Text
             style={{
-              color: 'yellow',
+              color: 'red',
               fontWeight: 'bold',
-              fontSize: 15,
+              fontSize: 18,
             }}>
             {user?.numberNoodle}
           </Text>
           <Text
             style={{
-              color: 'red',
+              color: '#9C6666',
               fontWeight: 'bold',
-              fontFamily: 'Roboto-Bold',
+              fontSize: 12,
+              fontFamily: 'PaytoneOne',
             }}>
             {' '}
             cups of noodles left this month
@@ -220,16 +232,15 @@ export default HomeScreen;
 
 const styles = StyleSheet.create({
   cupNoodle: {
-    marginTop: 0,
     width: 100,
-    height: 100,
+    height: 150,
     resizeMode: 'contain',
   },
   cupNoodle_Checked: {
     position: 'absolute',
     resizeMode: 'contain',
     width: 100,
-    height: 85,
+    height: 150,
     zIndex: -2,
     paddingBottom: -10,
   },

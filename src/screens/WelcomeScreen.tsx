@@ -199,7 +199,7 @@ const WelcomeScreen = ({navigation, route}: Props) => {
             Styles.justifyContentCenter,
             {
               position: 'absolute',
-              top: '30%',
+              top: '35%',
               left: '50%',
 
               transform: [{translateX: -115}, {translateY: -22.5}],
@@ -224,7 +224,7 @@ const WelcomeScreen = ({navigation, route}: Props) => {
               position: 'absolute',
               width: 108,
               height: 140,
-              marginTop: 50,
+              marginTop: '30%',
               alignItems: 'center',
             }}
             {...panResponder.panHandlers}>
