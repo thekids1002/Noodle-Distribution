@@ -21,6 +21,7 @@ const OutOfNoddlesScreen = () => {
               color: '#ffffff',
               fontSize: 20,
               fontWeight: '900',
+              fontFamily: 'Nunito-Black',
             }}>
             {' 0 '}
           </Text>

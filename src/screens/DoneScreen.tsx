@@ -13,6 +13,7 @@ import Styles from '../ultils/Styles';
 import Colors from '../ultils/Colors';
 import Constants from '../ultils/Constants';
 import FontSizes from '../ultils/FontSizes';
+import MyButton from '../components/MyButton';
 type Props = {
   navigation: any;
   route: any;
@@ -51,25 +52,11 @@ const DoneScreen: React.FC<Props> = ({navigation, route}) => {
           ]}
         />
 
-        <TouchableOpacity
-          activeOpacity={0.8}
+        <MyButton
           onPress={() => {
             navigation.replace('HomeScreen');
-          }}>
-          <Image
-            source={Constants.BTN_BACK_TO_HOME}
-            style={{
-              marginTop: 15,
-              width: '70%',
-              height: 50,
-              alignSelf: 'center',
-              alignItems: 'center',
-              alignContent: 'center',
-              justifyContent: 'center',
-              resizeMode: 'stretch',
-            }}
-          />
-        </TouchableOpacity>
+          }}
+          text={'Back to home'}></MyButton>
 
         <Text
           style={[

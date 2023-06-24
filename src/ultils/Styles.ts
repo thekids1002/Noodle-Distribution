@@ -43,6 +43,8 @@ const Styles = StyleSheet.create({
   },
   textOutCup: {
     color: '#980000',
+    fontWeight: '900',
+    fontFamily: 'Nunito-Black',
   },
 });
 

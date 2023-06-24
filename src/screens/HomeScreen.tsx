@@ -19,6 +19,8 @@ import InfomationBox from '../components/InfomationBox';
 import {Action, ThunkDispatch} from '@reduxjs/toolkit';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {fetchUser, setNumberNoodle} from '../features/user/userSlice';
+import Spinner from 'react-native-loading-spinner-overlay';
+import MyButton from '../components/MyButton';
 type Props = {
   navigation: any;
   route: any;
@@ -38,7 +40,7 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
   const [cup1, setcup1] = useState(false);
   const [cup2, setcup2] = useState(false);
   const [cup3, setcup3] = useState(false);
-
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     const fetchData = async () => {
       const value = await AsyncStorage.getItem('@storage_Key');
@@ -46,11 +48,29 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
         dispatch(fetchUser(value));
       }
     };
+
     fetchData();
   });
+  const startLoading = async () => {
+    setTimeout(() => {
+      setLoading(false);
+    }, 1000);
+  };
+
+  useEffect(() => {
+    startLoading();
+    console.log('12');
+  }, []);
 
   return (
     <View style={Styles.container}>
+      <Spinner
+        //visibility of Overlay Loading Spinner
+        visible={loading}
+        //Text with the Spinner
+        textContent={'Loading...'}
+        //Text style of the Spinner Text
+      />
       <StatusBar backgroundColor={Colors.BLACK} />
       <Background />
       <HeaderGroup title={'Infomation'} titleWidth={260} />
@@ -186,8 +206,7 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
           </Text>
         </Text>
 
-        <TouchableOpacity
-          activeOpacity={0.8}
+        <MyButton
           onPress={() => {
             if (user?.numberNoodle > 0) {
               let count = 0;
@@ -212,17 +231,14 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
                 Alert.alert('Bạn chưa chọn ly mỳ nào');
               }
             } else if (user?.numberNoodle <= 0) {
-              navigation.replace('OutOfNoodleScreen');
+              navigation.navigate('OutOfNoodleScreen');
             }
-          }}>
-          <Image
-            source={Constants.BTN_GET_NOODLES}
-            style={{
-              alignSelf: 'center',
-              resizeMode: 'center',
-            }}
-          />
-        </TouchableOpacity>
+          }}
+          text={
+            user?.numberNoodle > 0
+              ? "'Get your noodles'"
+              : 'Come back next month'
+          }></MyButton>
       </View>
     </View>
   );

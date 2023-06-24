@@ -46,9 +46,14 @@ const WelcomeScreen = ({navigation, route}: Props) => {
   const [path, setPath]: any = useState(false);
   const user = useSelector((state: RootState) => state.user.user);
   const dispatch = useDispatch<ThunkDispatch<RootState, any, Action>>();
-
+  const [loading, setLoading] = useState(true);
   const handleFetchUser = async (userId: string) => {
     await dispatch(fetchUser(userId));
+  };
+  const startLoading = async () => {
+    setTimeout(() => {
+      setLoading(false);
+    }, 3000);
   };
 
   const requestCameraPermission = async () => {
@@ -101,6 +106,7 @@ const WelcomeScreen = ({navigation, route}: Props) => {
           .then(async response => {
             const {values} = response;
             const message = values.join(', ');
+            await startLoading();
             if (message != null && message !== undefined && message != '') {
               await handleFetchUser(message);
             } else {
