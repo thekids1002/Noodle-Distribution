@@ -13,7 +13,6 @@ import {RootState} from '../app/store';
 import Styles from '../ultils/Styles';
 import HeaderGroup from '../components/HeaderGroup';
 import Background from '../components/Background';
-import Constants from '../ultils/Constants';
 import Colors from '../ultils/Colors';
 import InfomationBox from '../components/InfomationBox';
 import {Action, ThunkDispatch} from '@reduxjs/toolkit';
@@ -21,6 +20,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {fetchUser, setNumberNoodle} from '../features/user/userSlice';
 import Spinner from 'react-native-loading-spinner-overlay';
 import MyButton from '../components/MyButton';
+import {useFocusEffect} from '@react-navigation/native';
 type Props = {
   navigation: any;
   route: any;
@@ -32,25 +32,34 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
   const [avatar, setAvatar] = useState(
     'https://www.chanchao.com.tw/vietnamwood/images/default.jpg',
   );
-  const [fullname, setFullname] = useState('loading...');
-  const [birthday, setBirthday] = useState('loading...');
-  const [gender, setGender] = useState('loading...');
-  const [department, setDepartment] = useState('loading...');
+
   const dispatch = useDispatch<ThunkDispatch<RootState, any, Action>>();
   const [cup1, setcup1] = useState(false);
   const [cup2, setcup2] = useState(false);
   const [cup3, setcup3] = useState(false);
   const [loading, setLoading] = useState(true);
-  useEffect(() => {
-    const fetchData = async () => {
-      const value = await AsyncStorage.getItem('@storage_Key');
-      if (value) {
-        dispatch(fetchUser(value));
-      }
-    };
+  const [id, setId] = useState('');
 
-    fetchData();
-  });
+  const getUser = async () => {
+    const value = await AsyncStorage.getItem('@storage_Key');
+    if (value) {
+      dispatch(fetchUser(value));
+    }
+  };
+
+  useEffect(() => {
+    getUser();
+  }, []);
+  useEffect(() => {
+    const unsubcribe = navigation.addListener('focus', async () => {
+      console.log('ok');
+
+      await getUser();
+      await startLoading();
+    });
+
+    return unsubcribe;
+  }, [navigation]);
   const startLoading = async () => {
     setTimeout(() => {
       setLoading(false);
@@ -59,7 +68,6 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
 
   useEffect(() => {
     startLoading();
-    console.log('12');
   }, []);
 
   return (

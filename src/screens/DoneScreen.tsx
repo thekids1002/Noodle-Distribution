@@ -24,7 +24,7 @@ const DoneScreen: React.FC<Props> = ({navigation, route}) => {
       <StatusBar backgroundColor={Colors.BLACK} />
       <Background />
       <HeaderGroup title={'DONE'} />
-      <View style={{flex: 4}}>
+      <View style={{flex: 4.5}}>
         <Image
           resizeMode="contain"
           source={Constants.DONE_IMG}
@@ -40,9 +40,9 @@ const DoneScreen: React.FC<Props> = ({navigation, route}) => {
           resizeMode="contain"
           style={[
             {
-              marginTop: 30,
+              marginTop: 10,
               width: 200,
-              height: 50,
+              height: '14%',
               alignItems: 'center',
               justifyContent: 'center',
               alignSelf: 'center',
@@ -63,14 +63,14 @@ const DoneScreen: React.FC<Props> = ({navigation, route}) => {
             Styles.textCenter,
             Styles.textBold,
             FontSizes.h3,
-            {color: '#F8C135', marginTop: 20},
+            {color: '#F8C135', marginTop: '-8%'},
           ]}>
           Get them below
         </Text>
         <Image
           source={Constants.DOUBLE_ARROW_DOWN}
           resizeMode="center"
-          style={{alignSelf: 'center'}}
+          style={{alignSelf: 'center', marginTop: '-5%'}}
         />
       </View>
     </View>

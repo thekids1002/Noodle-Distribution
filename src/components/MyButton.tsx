@@ -13,7 +13,6 @@ interface ButtonWithTextProps {
 
 const MyButton: React.FC<ButtonWithTextProps> = ({onPress, text}) => {
   const dispatch = useDispatch();
-
   return (
     <TouchableOpacity activeOpacity={0.8} onPress={onPress}>
       <Image

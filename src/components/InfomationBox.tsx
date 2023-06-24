@@ -1,5 +1,5 @@
 import {StyleSheet, View, Image, Text, ImageBackground} from 'react-native';
-import React from 'react';
+import React, {useState} from 'react';
 import Styles from '../ultils/Styles';
 import FontSizes from '../ultils/FontSizes';
 import Colors from '../ultils/Colors';
@@ -33,7 +33,15 @@ const InfomationBox: React.FC<InformationBoxProps> = ({
         }}
         source={require('../assets/bg_info.png')}>
         <View style={[Styles.alignItemsCenter, {marginHorizontal: 20}]}>
-          <Image source={{uri: avatar}} style={styles.circleAvatar} />
+          <Image
+            source={{
+              uri:
+                avatar != null
+                  ? avatar
+                  : 'https://www.chanchao.com.tw/vietnamwood/images/default.jpg',
+            }}
+            style={styles.circleAvatar}
+          />
         </View>
         <View style={[Styles.row]}>
           <View>
@@ -78,16 +86,18 @@ const InfomationBox: React.FC<InformationBoxProps> = ({
             <Text
               style={[FontSizes.h5, styles.infomationText]}
               numberOfLines={1}>
-              {fullName}
+              {fullName != null ? fullName : 'Loading'}
             </Text>
             <Text style={[FontSizes.h5, styles.infomationText]}>
-              {birthday}
+              {birthday != null ? birthday : 'Loading'}
             </Text>
-            <Text style={[FontSizes.h5, styles.infomationText]}>{gender}</Text>
+            <Text style={[FontSizes.h5, styles.infomationText]}>
+              {gender != null ? gender : 'Loading'}
+            </Text>
             <Text
               style={[FontSizes.h5, styles.infomationText]}
               numberOfLines={1}>
-              {department}
+              {department != null ? department : 'Loading'}
             </Text>
           </View>
         </View>

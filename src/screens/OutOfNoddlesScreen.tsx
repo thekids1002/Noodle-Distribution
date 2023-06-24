@@ -5,8 +5,11 @@ import Styles from '../ultils/Styles';
 import Colors from '../ultils/Colors';
 import HeaderGroup from '../components/HeaderGroup';
 import Constants from '../ultils/Constants';
-
-const OutOfNoddlesScreen = () => {
+type Props = {
+  navigation: any;
+  route: any;
+};
+const OutOfNoddlesScreen: React.FC<Props> = ({navigation, route}) => {
   return (
     <View style={Styles.container}>
       <StatusBar backgroundColor={Colors.BLACK} />
