@@ -53,7 +53,7 @@ export const fetchUser = createAsyncThunk(
 export const setNumberNoodle = createAsyncThunk(
   'user/setNumberNoodle',
   async ({message, numberNoodle}: {message: string; numberNoodle: number}) => {
-    firestore()
+    await firestore()
       .collection('users')
       .doc(message)
       .update({
