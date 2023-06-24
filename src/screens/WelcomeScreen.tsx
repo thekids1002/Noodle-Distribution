@@ -177,9 +177,15 @@ const WelcomeScreen = ({navigation, route}: Props) => {
       <StatusBar backgroundColor={Colors.BLACK} />
       <Background />
       <HeaderGroup title={'welcome'} />
-
       <ImageBackground
-        style={{marginLeft: 43, width: 285, height: 170, paddingTop: 2}}
+        style={{
+          position: 'absolute',
+          top: '43%',
+          left: '50%',
+          transform: [{translateX: -142.5}, {translateY: -85}],
+          width: 285,
+          height: 170,
+        }}
         source={require('../assets/border_video_alt.png')}>
         <View style={[Styles.alignItemsCenter]}>
           <Image source={Constants.ALTA_VIDEO} style={styles.altaVideo} />
@@ -191,6 +197,13 @@ const WelcomeScreen = ({navigation, route}: Props) => {
             Styles.row,
             Styles.alignItemsCenter,
             Styles.justifyContentCenter,
+            {
+              position: 'absolute',
+              top: '30%',
+              left: '50%',
+
+              transform: [{translateX: -115}, {translateY: -22.5}],
+            },
           ]}>
           <Image source={Constants.IC_SCAN} style={styles.iconScan} />
           <Text style={[FontSizes.h3, styles.bottomTitle]}>
@@ -217,7 +230,6 @@ const WelcomeScreen = ({navigation, route}: Props) => {
             {...panResponder.panHandlers}>
             <Image source={Constants.SCAN_AREA} style={styles.scanArea} />
           </Animated.View>
-          {/* <Image source={Constants.SCAN_AREA} style={styles.scanArea} /> */}
         </View>
         <Image source={Constants.DOUBLE_ARROW} style={styles.doubleArrow} />
       </View>
@@ -234,10 +246,10 @@ const styles = StyleSheet.create({
     height: 150,
     resizeMode: 'center',
     borderRadius: 10,
-    marginTop: 5,
+    marginTop: 7.5,
     marginBottom: 5,
-    marginLeft: 14,
-    marginRight: 10,
+    marginLeft: 15.5,
+    marginRight: 11.5,
   },
   containerBottom: {
     flex: 1,
@@ -257,7 +269,8 @@ const styles = StyleSheet.create({
     width: 108,
     height: 140,
     resizeMode: 'center',
-    marginTop: 125,
+    top: '100%',
+    marginTop: 75,
   },
   doubleArrow: {
     width: 68,
