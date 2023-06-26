@@ -22,15 +22,14 @@ import FontSizes from '../ultils/FontSizes';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {RootStackParams} from '../navigations/RootStackParam';
 import {useDispatch, useSelector} from 'react-redux';
-import {RootState} from '../app/store';
-import {fetchUser} from '../features/user/userSlice';
+import {AppDispatch, RootState} from '../app/store';
+import {fetchUser, setTempUid, setUser} from '../features/user/userSlice';
 import {Action, ThunkDispatch} from '@reduxjs/toolkit';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-type Props = NativeStackScreenProps<RootStackParams, 'WelcomeScreen'>;
 
-type WellComeProps = {
-  navgiation: any;
-  router: any;
+type LoginScreenProps = {
+  navigation: any;
+  route: any;
 };
 
 interface User {
@@ -39,17 +38,22 @@ interface User {
   Gender: any;
   Department: any;
   numberNoodle: any;
-  //   Image: any;
+  Image: any;
 }
 
-const WelcomeScreen = ({navigation, route}: Props) => {
+const WelcomeScreen: React.FC<LoginScreenProps> = ({navigation, route}) => {
   const [path, setPath]: any = useState(false);
   const user = useSelector((state: RootState) => state.user.user);
-  const dispatch = useDispatch<ThunkDispatch<RootState, any, Action>>();
+  const dispatch = useDispatch<AppDispatch>();
   const [loading, setLoading] = useState(true);
+
+  const tempUid = useSelector((state: RootState) => state.user.tempUId);
+
   const handleFetchUser = async (userId: string) => {
     await dispatch(fetchUser(userId));
+    await dispatch(setTempUid(userId));
   };
+
   const startLoading = async () => {
     setTimeout(() => {
       setLoading(false);
@@ -97,53 +101,47 @@ const WelcomeScreen = ({navigation, route}: Props) => {
       } else if (response.customButton) {
         console.log('User tapped custom button: ', response.customButton);
       } else {
-        //console.log(response);
         const path = {uri: response.assets[0].uri};
         setPath(path);
-        RNQRGenerator.detect({
-          uri: response.assets[0].uri,
-        })
-          .then(async response => {
-            const {values} = response;
-            const message = values.join(', ');
-            await startLoading();
-            if (message != null && message !== undefined && message != '') {
-              await handleFetchUser(message);
-            } else {
-              navigation.replace('ErrorScanScreen');
-            }
-          })
-          .catch(error => console.log('Cannot detect QR code in image', error));
+        processQRCode(path.uri);
       }
     });
+  };
+
+  const processQRCode = async (imageUri: string) => {
+    try {
+      const qrResponse = await RNQRGenerator.detect({uri: imageUri});
+      const {values} = qrResponse;
+      const message = values.join(', ');
+      await startLoading();
+      if (message) {
+        await handleFetchUser(message);
+      } else {
+        navigation.replace('ErrorScanScreen');
+      }
+    } catch (error) {
+      console.log('Cannot detect QR code in image', error);
+    }
   };
 
   useEffect(() => {
     const getData = async () => {
       try {
         const value = await AsyncStorage.getItem('@storage_Key');
+        console.log(value);
         if (value !== null) {
-          navigation.replace('HomeScreen');
+          navigation.replace('HomeScreen', value);
         }
       } catch (e) {}
     };
     getData();
     if (user) {
-      const storeData = async (value: string) => {
-        try {
-          await AsyncStorage.setItem('@storage_Key', value);
-        } catch (e) {
-          // saving error
-        }
-      };
-      storeData(user.UID);
-      console.log(user.UID);
       navigation.replace('HomeScreen');
     }
     if (user === null) {
       navigation.replace('ErrorScanScreen');
     }
-  }, [user]);
+  }, [user, tempUid]);
 
   const pan = useRef(new Animated.ValueXY()).current;
 
@@ -239,7 +237,6 @@ const WelcomeScreen = ({navigation, route}: Props) => {
         </View>
         <Image source={Constants.DOUBLE_ARROW} style={styles.doubleArrow} />
       </View>
-      {/* <FooterGroup /> */}
     </View>
   );
 };

@@ -14,24 +14,27 @@ import Colors from '../ultils/Colors';
 import Constants from '../ultils/Constants';
 import FontSizes from '../ultils/FontSizes';
 import MyButton from '../components/MyButton';
+import {useSelector} from 'react-redux';
+import {RootState} from '../app/store';
 type Props = {
   navigation: any;
   route: any;
 };
 const DoneScreen: React.FC<Props> = ({navigation, route}) => {
+  const tempUid = useSelector((state: RootState) => state.user.tempUId);
   return (
     <View style={Styles.container}>
       <StatusBar backgroundColor={Colors.BLACK} />
       <Background />
-      <HeaderGroup title={'DONE'} />
+      <HeaderGroup title={'done'} />
       <View style={{flex: 4.5}}>
         <Image
           resizeMode="contain"
           source={Constants.DONE_IMG}
           style={{
             marginTop: 75,
-            width: 200,
-            height: 200,
+            width: 220,
+            height: 220,
             alignSelf: 'center',
           }}
         />
@@ -40,7 +43,7 @@ const DoneScreen: React.FC<Props> = ({navigation, route}) => {
           resizeMode="contain"
           style={[
             {
-              marginTop: 10,
+              top: '-5%',
               width: 200,
               height: '14%',
               alignItems: 'center',
@@ -51,10 +54,9 @@ const DoneScreen: React.FC<Props> = ({navigation, route}) => {
             },
           ]}
         />
-
         <MyButton
           onPress={() => {
-            navigation.replace('HomeScreen');
+            navigation.replace('HomeScreen', tempUid);
           }}
           text={'Back to home'}></MyButton>
 
@@ -70,7 +72,7 @@ const DoneScreen: React.FC<Props> = ({navigation, route}) => {
         <Image
           source={Constants.DOUBLE_ARROW_DOWN}
           resizeMode="center"
-          style={{alignSelf: 'center', marginTop: '-5%'}}
+          style={{alignSelf: 'center', marginTop: '-2%'}}
         />
       </View>
     </View>

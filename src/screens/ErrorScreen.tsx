@@ -22,24 +22,31 @@ import * as ImagePicker from 'react-native-image-picker';
 import FontSizes from '../ultils/FontSizes';
 import firestore from '@react-native-firebase/firestore';
 import {useDispatch, useSelector} from 'react-redux';
-import {RootState} from '../app/store';
+import {AppDispatch, RootState} from '../app/store';
 import {Action, ThunkDispatch} from '@reduxjs/toolkit';
-import {fetchUser} from '../features/user/userSlice';
+import {fetchUser, setTempUid} from '../features/user/userSlice';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 type PropsError = {
   navigation: any;
   route: any;
 };
 const ErrorScreen: React.FC<PropsError> = ({navigation, route}) => {
-  const dispatch = useDispatch<ThunkDispatch<RootState, any, Action>>();
-
   const user = useSelector((state: RootState) => state.user.user);
-
+  const dispatch = useDispatch<AppDispatch>();
+  const [loading, setLoading] = useState(true);
+  const tempUid = useSelector((state: RootState) => state.user.tempUId);
+  const [path, setPath]: any = useState(false);
   const handleFetchUser = async (userId: string) => {
     await dispatch(fetchUser(userId));
+    await dispatch(setTempUid(userId));
   };
 
-  const [path, setPath]: any = useState(false);
+  const startLoading = async () => {
+    setTimeout(() => {
+      setLoading(false);
+    }, 3000);
+  };
+
   const requestCameraPermission = async () => {
     try {
       const granted = await PermissionsAndroid.request(
@@ -81,52 +88,47 @@ const ErrorScreen: React.FC<PropsError> = ({navigation, route}) => {
       } else if (response.customButton) {
         console.log('User tapped custom button: ', response.customButton);
       } else {
-        // console.log(response);
         const path = {uri: response.assets[0].uri};
         setPath(path);
-        RNQRGenerator.detect({
-          uri: response.assets[0].uri,
-        })
-          .then(async response => {
-            const {values} = response;
-            const message = values.join(', ');
-            if (message != null && message !== undefined && message != '') {
-              await handleFetchUser(message);
-            } else {
-              // navigation.replace('ErrorScanScreen');
-            }
-          })
-          .catch(error => console.log('Cannot detect QR code in image', error));
+        processQRCode(path.uri);
       }
     });
+  };
+
+  const processQRCode = async (imageUri: string) => {
+    try {
+      const qrResponse = await RNQRGenerator.detect({uri: imageUri});
+      const {values} = qrResponse;
+      const message = values.join(', ');
+      await startLoading();
+      if (message) {
+        await handleFetchUser(message);
+      } else {
+        navigation.replace('ErrorScanScreen');
+      }
+    } catch (error) {
+      console.log('Cannot detect QR code in image', error);
+    }
   };
 
   useEffect(() => {
     const getData = async () => {
       try {
         const value = await AsyncStorage.getItem('@storage_Key');
+        console.log(value);
         if (value !== null) {
-          navigation.replace('HomeScreen');
+          navigation.replace('HomeScreen', value);
         }
       } catch (e) {}
     };
     getData();
     if (user) {
-      const storeData = async (value: string) => {
-        try {
-          await AsyncStorage.setItem('@storage_Key', value);
-        } catch (e) {
-          // saving error
-        }
-      };
-      storeData(user.UID);
-      console.log(user.UID);
       navigation.replace('HomeScreen');
     }
     if (user === null) {
       navigation.replace('ErrorScanScreen');
     }
-  }, [user]);
+  }, [user, tempUid]);
 
   const pan = useRef(new Animated.ValueXY()).current;
 

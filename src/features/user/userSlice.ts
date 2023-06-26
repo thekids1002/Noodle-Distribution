@@ -1,17 +1,7 @@
-// Định nghĩa slice quản lý trạng thái của người dùng
-// Bao gồm thông tin về người dùng như UID, họ tên, ngày sinh, giới tính, phòng ban, số mì tương ứng và hình ảnh.
-// Slice bao gồm một trạng thái ban đầu cho người dùng là không xác định và trạng thái của slice có thể là idle, loading, succeeded hoặc failed.
-// Slice bao gồm một action để thiết lập thông tin người dùng và một async action để lấy thông tin người dùng từ tài liệu Firestore
 import firestore from '@react-native-firebase/firestore';
-import {
-  createSlice,
-  PayloadAction,
-  configureStore,
-  createAsyncThunk,
-} from '@reduxjs/toolkit';
+import {createSlice, PayloadAction, createAsyncThunk} from '@reduxjs/toolkit';
 
 interface User {
-  UID: any;
   FullName: any;
   Birthday: any;
   Gender: any;
@@ -24,12 +14,14 @@ interface userState {
   user: User | undefined | null;
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   error: string | null;
+  tempUId: string;
 }
 
 const initialState: userState = {
   user: undefined,
   status: 'idle',
   error: null,
+  tempUId: '',
 };
 
 export const fetchUser = createAsyncThunk(
@@ -69,8 +61,9 @@ const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    setUser: (state, action: PayloadAction<User>) => {
-      state.user = action.payload;
+    setUser: (state, action: PayloadAction<string>) => {},
+    setTempUid: (state, action: PayloadAction<string>) => {
+      state.tempUId = action.payload;
     },
   },
   extraReducers: builder => {
@@ -99,7 +92,6 @@ const userSlice = createSlice({
       });
   },
 });
-
-export const {setUser} = userSlice.actions;
+export const {setUser, setTempUid} = userSlice.actions;
 
 export default userSlice.reducer;

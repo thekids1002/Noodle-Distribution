@@ -17,17 +17,22 @@ import Colors from '../ultils/Colors';
 import InfomationBox from '../components/InfomationBox';
 import {Action, ThunkDispatch} from '@reduxjs/toolkit';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {fetchUser, setNumberNoodle} from '../features/user/userSlice';
+import {
+  fetchUser,
+  setNumberNoodle,
+  setTempUid,
+} from '../features/user/userSlice';
 import Spinner from 'react-native-loading-spinner-overlay';
 import MyButton from '../components/MyButton';
 import {useFocusEffect} from '@react-navigation/native';
+
 type Props = {
   navigation: any;
   route: any;
 };
+
 const HomeScreen: React.FC<Props> = ({navigation, route}) => {
   const user = useSelector((state: RootState) => state.user.user);
-  const [cups, setCups] = useState([false, false, false]);
 
   const [avatar, setAvatar] = useState(
     'https://www.chanchao.com.tw/vietnamwood/images/default.jpg',
@@ -38,28 +43,45 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
   const [cup2, setcup2] = useState(false);
   const [cup3, setcup3] = useState(false);
   const [loading, setLoading] = useState(true);
+
   const [id, setId] = useState('');
 
   const getUser = async () => {
     const value = await AsyncStorage.getItem('@storage_Key');
     if (value) {
       dispatch(fetchUser(value));
+      dispatch(setTempUid(value));
     }
   };
 
   useEffect(() => {
     getUser();
   }, []);
+
   useEffect(() => {
     const unsubcribe = navigation.addListener('focus', async () => {
-      console.log('ok');
-
       await getUser();
       await startLoading();
     });
 
     return unsubcribe;
   }, [navigation]);
+
+  const tempUid = useSelector((state: RootState) => state.user.tempUId);
+
+  useEffect(() => {
+    const storeData = async (value: string) => {
+      try {
+        await AsyncStorage.setItem('@storage_Key', value);
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    if (tempUid != '' && tempUid != undefined) {
+      storeData(tempUid);
+    }
+  }, [tempUid]);
+
   const startLoading = async () => {
     setTimeout(() => {
       setLoading(false);
@@ -193,6 +215,7 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
             alignSelf: 'center',
             fontSize: 10,
             fontWeight: 'bold',
+            marginBottom: 10,
           }}>
           <Text
             style={{
@@ -215,7 +238,7 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
         </Text>
 
         <MyButton
-          onPress={() => {
+          onPress={async () => {
             if (user?.numberNoodle > 0) {
               let count = 0;
               if (cup1) {
@@ -228,9 +251,9 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
                 count++;
               }
               if (count > 0) {
-                dispatch(
+                await dispatch(
                   setNumberNoodle({
-                    message: user?.UID,
+                    message: tempUid,
                     numberNoodle: user?.numberNoodle - count,
                   }),
                 );
@@ -243,9 +266,7 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
             }
           }}
           text={
-            user?.numberNoodle > 0
-              ? "'Get your noodles'"
-              : 'Come back next month'
+            user?.numberNoodle > 0 ? 'Get your noodles' : 'Come back next month'
           }></MyButton>
       </View>
     </View>
