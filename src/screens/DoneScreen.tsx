@@ -1,11 +1,4 @@
-import {
-  StyleSheet,
-  StatusBar,
-  View,
-  Image,
-  TouchableOpacity,
-  Text,
-} from 'react-native';
+import {StyleSheet, StatusBar, View, Image, Text} from 'react-native';
 import React from 'react';
 import Background from '../components/Background';
 import HeaderGroup from '../components/HeaderGroup';
@@ -16,6 +9,7 @@ import FontSizes from '../ultils/FontSizes';
 import MyButton from '../components/MyButton';
 import {useSelector} from 'react-redux';
 import {RootState} from '../app/store';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 type Props = {
   navigation: any;
   route: any;
@@ -69,7 +63,16 @@ const DoneScreen: React.FC<Props> = ({navigation, route}) => {
               fontSize: 21,
             },
           ]}>
-          Enjoy your Noodles
+          Enjoy your Noodles{' '}
+          <Image
+            resizeMode="stretch"
+            style={{
+              maxHeight: 5,
+              maxWidth: 5,
+              resizeMode: '',
+            }}
+            source={require('../assets/IconHeart.png')}
+          />
         </Text>
         <MyButton
           onPress={() => {
