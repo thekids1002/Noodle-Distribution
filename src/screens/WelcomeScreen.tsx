@@ -23,7 +23,7 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {RootStackParams} from '../navigations/RootStackParam';
 import {useDispatch, useSelector} from 'react-redux';
 import {AppDispatch, RootState} from '../app/store';
-import {fetchUser, setTempUid, setUser} from '../features/user/userSlice';
+import {fetchUser} from '../features/user/userSlice';
 import {Action, ThunkDispatch} from '@reduxjs/toolkit';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -44,16 +44,12 @@ interface User {
 const WelcomeScreen: React.FC<LoginScreenProps> = ({navigation, route}) => {
   const [path, setPath]: any = useState(false);
   const user = useSelector((state: RootState) => state.user.user);
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useDispatch<ThunkDispatch<RootState, any, Action>>();
   const [loading, setLoading] = useState(true);
-
-  const tempUid = useSelector((state: RootState) => state.user.tempUId);
 
   // lấy dữ liệu từ firebase
   const handleFetchUser = async (userId: string) => {
     await dispatch(fetchUser(userId));
-    // set tempUid vào store.
-    await dispatch(setTempUid(userId));
   };
 
   // màn hình loading
@@ -146,14 +142,29 @@ const WelcomeScreen: React.FC<LoginScreenProps> = ({navigation, route}) => {
     getData();
 
     if (user) {
+      const storeData = async (value: string) => {
+        try {
+          await AsyncStorage.setItem('@storage_Key', value);
+        } catch (e) {
+          console.log(e);
+        }
+      };
+
+      if (user.UserID != '') {
+        storeData(user.UserID);
+        console.log('storee ok ' + user.UserID);
+      }
+
       // nếu user thì chuyển sang màn hình homescreen
       navigation.replace('HomeScreen');
     }
+
     if (user === null) {
+      console.log('ok');
       // ngược lại chuyển sang màn hinh lỗi
       navigation.replace('ErrorScanScreen');
     }
-  }, [user, tempUid]);
+  }, [user]);
 
   const pan = useRef(new Animated.ValueXY()).current;
 

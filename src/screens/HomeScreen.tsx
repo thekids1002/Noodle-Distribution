@@ -17,7 +17,7 @@ import Colors from '../ultils/Colors';
 import InfomationBox from '../components/InfomationBox';
 import {Action, ThunkDispatch} from '@reduxjs/toolkit';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {fetchUser, setTempUid, subNoodle} from '../features/user/userSlice';
+import {fetchUser, subNoodle} from '../features/user/userSlice';
 import Spinner from 'react-native-loading-spinner-overlay';
 import MyButton from '../components/MyButton';
 import {useFocusEffect} from '@react-navigation/native';
@@ -42,7 +42,6 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
     const value = await AsyncStorage.getItem('@storage_Key');
     if (value) {
       dispatch(fetchUser(value));
-      dispatch(setTempUid(value));
     }
   };
 
@@ -59,23 +58,6 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
     });
     return unsubcribe;
   }, [navigation]);
-
-  const tempUid = useSelector((state: RootState) => state.user.tempUId);
-
-  // sau khi userID đã được set vào store
-  // ở đây sẽ lưu lại UserId vào AsyncStorage
-  useEffect(() => {
-    const storeData = async (value: string) => {
-      try {
-        await AsyncStorage.setItem('@storage_Key', value);
-      } catch (e) {
-        console.log(e);
-      }
-    };
-    if (tempUid != '' && tempUid != undefined) {
-      storeData(tempUid);
-    }
-  }, [tempUid]);
 
   const startLoading = async () => {
     setTimeout(() => {
@@ -245,7 +227,7 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
                 // xử lý set lại số ly mì trên firebase
                 await dispatch(
                   subNoodle({
-                    message: tempUid,
+                    message: user?.UserID,
                     numberNoodle: user?.numberNoodle - count,
                   }),
                 );

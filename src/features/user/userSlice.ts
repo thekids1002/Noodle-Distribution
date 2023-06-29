@@ -2,6 +2,7 @@ import firestore from '@react-native-firebase/firestore';
 import {createSlice, PayloadAction, createAsyncThunk} from '@reduxjs/toolkit';
 import storage from '@react-native-firebase/storage';
 interface User {
+  UserID: any;
   FullName: any;
   Birthday: any;
   Gender: any;
@@ -14,35 +15,35 @@ interface userState {
   user: User | undefined | null;
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   error: string | null;
-  tempUId: string;
 }
 
 const initialState: userState = {
   user: undefined,
   status: 'idle',
   error: null,
-  tempUId: '',
 };
 
 // lấy dữ liệu từ firebase sử dụng createAsyncThunk và trả về 1 User
 export const fetchUser = createAsyncThunk(
   'user/fetchUser',
   async (message: string) => {
-    const userDocument = firestore()
-      .collection('users')
-      .doc(message)
-      .get()
-      .then(snapshot => {
-        const data: User | null =
-          (snapshot.exists && (snapshot.data() as User)) || null;
+    try {
+      const userDocument = await firestore()
+        .collection('users')
+        .where('UserID', '==', message)
+        .get();
 
-        return data;
-      });
-    const data = await userDocument;
-    if (data != null && data != undefined) {
-      data.Image = await storage().ref(data.Image).getDownloadURL();
+      if (userDocument.empty) {
+        return null;
+      }
+      const user = userDocument.docs[0].data() as User;
+      if (user.Image != '') {
+        user.Image = await storage().ref(user.Image).getDownloadURL();
+      }
+      return user;
+    } catch (error) {
+      throw error;
     }
-    return data;
   },
 );
 
@@ -52,11 +53,14 @@ export const subNoodle = createAsyncThunk(
   async ({message, numberNoodle}: {message: string; numberNoodle: number}) => {
     await firestore()
       .collection('users')
-      .doc(message)
-      .update({
-        numberNoodle: numberNoodle,
-      })
-      .then(() => {
+      .where('UserID', '==', message)
+      .get()
+      .then(querySnapshot => {
+        querySnapshot.forEach(async doc => {
+          await firestore().collection('users').doc(doc.id).update({
+            numberNoodle: numberNoodle,
+          });
+        });
         console.log('SubNoodle success :' + numberNoodle);
       });
   },
@@ -67,9 +71,6 @@ const userSlice = createSlice({
   initialState,
   reducers: {
     setUser: (state, action: PayloadAction<string>) => {},
-    setTempUid: (state, action: PayloadAction<string>) => {
-      state.tempUId = action.payload;
-    },
   },
   extraReducers: builder => {
     builder
@@ -97,6 +98,6 @@ const userSlice = createSlice({
       });
   },
 });
-export const {setUser, setTempUid} = userSlice.actions;
+export const {setUser} = userSlice.actions;
 
 export default userSlice.reducer;

@@ -14,7 +14,7 @@ const OutOfNoddlesScreen: React.FC<Props> = ({navigation, route}) => {
     <View style={Styles.container}>
       <StatusBar backgroundColor={Colors.BLACK} />
       <Background />
-      <HeaderGroup title={''} titleWidth={260} />
+      <HeaderGroup title={'OUT OF Noodle'} titleWidth={260} />
 
       <View style={[Styles.alignItemsCenter, {flex: 1}]}>
         <Text style={[Styles.textOutCup, styles.alert]}>

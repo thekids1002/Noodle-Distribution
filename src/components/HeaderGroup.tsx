@@ -18,6 +18,8 @@ const HeaderGroup: React.FC<headerGroupProps> = ({title, titleWidth}) => {
             color: '#C71A1A',
             fontSize: 30,
             textAlign: 'center',
+            justifyContent: 'center',
+            alignItems: 'center',
           },
         ]}>
         {title}
@@ -42,7 +44,7 @@ const styles = StyleSheet.create({
     marginTop: 0,
   },
   title: {
-    width: 259,
+    width: 500,
     height: 130,
     alignItems: 'center',
     justifyContent: 'center',

@@ -7,15 +7,11 @@ import Colors from '../ultils/Colors';
 import Constants from '../ultils/Constants';
 import FontSizes from '../ultils/FontSizes';
 import MyButton from '../components/MyButton';
-import {useSelector} from 'react-redux';
-import {RootState} from '../app/store';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 type Props = {
   navigation: any;
   route: any;
 };
 const DoneScreen: React.FC<Props> = ({navigation, route}) => {
-  const tempUid = useSelector((state: RootState) => state.user.tempUId);
   return (
     <View style={Styles.container}>
       <StatusBar backgroundColor={Colors.BLACK} />
@@ -71,7 +67,7 @@ const DoneScreen: React.FC<Props> = ({navigation, route}) => {
         </Text>
         <MyButton
           onPress={() => {
-            navigation.replace('HomeScreen', tempUid);
+            navigation.replace('HomeScreen');
           }}
           text={'Back to home'}></MyButton>
 

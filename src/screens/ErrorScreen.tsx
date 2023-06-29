@@ -20,11 +20,10 @@ import FooterGroup from '../components/FooterGroup';
 import RNQRGenerator from 'rn-qr-generator';
 import * as ImagePicker from 'react-native-image-picker';
 import FontSizes from '../ultils/FontSizes';
-import firestore from '@react-native-firebase/firestore';
 import {useDispatch, useSelector} from 'react-redux';
 import {AppDispatch, RootState} from '../app/store';
 import {Action, ThunkDispatch} from '@reduxjs/toolkit';
-import {fetchUser, setTempUid} from '../features/user/userSlice';
+import {fetchUser} from '../features/user/userSlice';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 type PropsError = {
   navigation: any;
@@ -32,13 +31,11 @@ type PropsError = {
 };
 const ErrorScreen: React.FC<PropsError> = ({navigation, route}) => {
   const user = useSelector((state: RootState) => state.user.user);
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useDispatch<ThunkDispatch<RootState, any, Action>>();
   const [loading, setLoading] = useState(true);
-  const tempUid = useSelector((state: RootState) => state.user.tempUId);
   const [path, setPath]: any = useState(false);
   const handleFetchUser = async (userId: string) => {
     await dispatch(fetchUser(userId));
-    await dispatch(setTempUid(userId));
   };
 
   const startLoading = async () => {
@@ -115,20 +112,34 @@ const ErrorScreen: React.FC<PropsError> = ({navigation, route}) => {
     const getData = async () => {
       try {
         const value = await AsyncStorage.getItem('@storage_Key');
-        console.log(value);
         if (value !== null) {
           navigation.replace('HomeScreen', value);
         }
       } catch (e) {}
     };
     getData();
-    if (user) {
+
+    if (user != null) {
+      const storeData = async (value: string) => {
+        try {
+          await AsyncStorage.setItem('@storage_Key', value);
+        } catch (e) {
+          console.log(e);
+        }
+      };
+      if (
+        user.UserID != '' &&
+        user.UserID != undefined &&
+        user.UserID != null
+      ) {
+        storeData(user.UserID);
+      }
       navigation.replace('HomeScreen');
     }
-    if (user === null) {
-      navigation.replace('ErrorScanScreen');
-    }
-  }, [user, tempUid]);
+    // if (user === null) {
+    //   navigation.replace('ErrorScanScreen');
+    // }
+  }, [user]);
 
   const pan = useRef(new Animated.ValueXY()).current;
 
