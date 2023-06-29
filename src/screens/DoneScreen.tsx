@@ -65,12 +65,7 @@ const DoneScreen: React.FC<Props> = ({navigation, route}) => {
           ]}>
           Enjoy your Noodles{' '}
           <Image
-            resizeMode="stretch"
-            style={{
-              maxHeight: 5,
-              maxWidth: 5,
-              resizeMode: '',
-            }}
+            resizeMode="contain"
             source={require('../assets/IconHeart.png')}
           />
         </Text>
