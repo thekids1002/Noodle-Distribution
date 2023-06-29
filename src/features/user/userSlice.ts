@@ -1,6 +1,6 @@
 import firestore from '@react-native-firebase/firestore';
 import {createSlice, PayloadAction, createAsyncThunk} from '@reduxjs/toolkit';
-
+import storage from '@react-native-firebase/storage';
 interface User {
   FullName: any;
   Birthday: any;
@@ -39,6 +39,9 @@ export const fetchUser = createAsyncThunk(
         return data;
       });
     const data = await userDocument;
+    if (data != null && data != undefined) {
+      data.Image = await storage().ref(data.Image).getDownloadURL();
+    }
     return data;
   },
 );

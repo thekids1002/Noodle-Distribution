@@ -107,11 +107,7 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
         }}>
         <View>
           <InfomationBox
-            avatar={
-              'https://firebasestorage.googleapis.com/v0/b/noodle-41cfb.appspot.com/o/' +
-              user?.Image +
-              '?alt=media&token=f0edab66-7079-479d-a19e-a66a1e580757'
-            }
+            avatar={user?.Image}
             fullName={user?.FullName}
             birthday={user?.Birthday}
             gender={user?.Gender}
@@ -223,7 +219,6 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
           <Text
             style={{
               color: '#9C6666',
-              fontWeight: 'bold',
               fontSize: 12,
               fontFamily: 'paytoneone',
             }}>
@@ -256,7 +251,6 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
                 );
                 navigation.replace('DoneScreens');
               } else {
-                Alert.alert('Bạn chưa chọn ly mỳ nào');
               }
             } else if (user?.numberNoodle <= 0) {
               navigation.navigate('OutOfNoodleScreen');

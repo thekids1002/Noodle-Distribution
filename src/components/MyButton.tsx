@@ -23,14 +23,13 @@ const MyButton: React.FC<ButtonWithTextProps> = ({onPress, text}) => {
       />
       <Text
         style={{
-          fontFamily: 'Nexa-Rust',
+          fontFamily: 'paytoneone',
           position: 'absolute',
           alignSelf: 'center',
           top: '50%',
           transform: [{translateY: -14}],
           color: '#A31616',
-          fontSize: 18,
-          fontWeight: 'bold',
+          fontSize: 16,
         }}>
         {text}
       </Text>

@@ -38,12 +38,12 @@ const DoneScreen: React.FC<Props> = ({navigation, route}) => {
             alignSelf: 'center',
           }}
         />
-        <Image
+        {/* <Image
           source={require('../assets/enjoynoodle.png')}
           resizeMode="contain"
           style={[
             {
-              opacity: 0.75,
+              opacity: 0.7,
               top: '-5%',
               width: 200,
               height: '14%',
@@ -54,7 +54,23 @@ const DoneScreen: React.FC<Props> = ({navigation, route}) => {
               resizeMode: 'contain',
             },
           ]}
-        />
+        /> */}
+
+        <Text
+          style={[
+            {
+              color: '#C71A1A',
+              height: '13.5%',
+              alignItems: 'center',
+              justifyContent: 'center',
+              alignSelf: 'center',
+              alignContent: 'center',
+              fontFamily: 'paytoneone',
+              fontSize: 21,
+            },
+          ]}>
+          Enjoy your Noodles
+        </Text>
         <MyButton
           onPress={() => {
             navigation.replace('HomeScreen', tempUid);
