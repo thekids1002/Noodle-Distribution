@@ -49,11 +49,14 @@ const WelcomeScreen: React.FC<LoginScreenProps> = ({navigation, route}) => {
 
   const tempUid = useSelector((state: RootState) => state.user.tempUId);
 
+  // lấy dữ liệu từ firebase
   const handleFetchUser = async (userId: string) => {
     await dispatch(fetchUser(userId));
+    // set tempUid vào store.
     await dispatch(setTempUid(userId));
   };
 
+  // màn hình loading
   const startLoading = async () => {
     setTimeout(() => {
       setLoading(false);
@@ -82,6 +85,7 @@ const WelcomeScreen: React.FC<LoginScreenProps> = ({navigation, route}) => {
     }
   };
 
+  // hàm chụp ảnh
   const takePicture = async () => {
     await requestCameraPermission();
     const options = {
@@ -108,15 +112,18 @@ const WelcomeScreen: React.FC<LoginScreenProps> = ({navigation, route}) => {
     });
   };
 
+  // hàm xử lý QR code lấy được từ hình ảnh
   const processQRCode = async (imageUri: string) => {
     try {
       const qrResponse = await RNQRGenerator.detect({uri: imageUri});
       const {values} = qrResponse;
-      const message = values.join(', ');
+      const message = values.join(', '); //nội dung QR code sau khi phân tích
       await startLoading();
       if (message) {
+        // lấy dữ liệu của user
         await handleFetchUser(message);
       } else {
+        // thông báo lỗi
         navigation.replace('ErrorScanScreen');
       }
     } catch (error) {
@@ -125,20 +132,25 @@ const WelcomeScreen: React.FC<LoginScreenProps> = ({navigation, route}) => {
   };
 
   useEffect(() => {
+    // hàm đọc lại userID từ AsyncStorage khi user, tempUid thay đổi
     const getData = async () => {
       try {
         const value = await AsyncStorage.getItem('@storage_Key');
-        console.log(value);
         if (value !== null) {
+          // nếu có dữ liệu thì chuyển sang màn hình homescreen
           navigation.replace('HomeScreen', value);
         }
       } catch (e) {}
     };
+    // đọc userID từ AsyncStorage
     getData();
+
     if (user) {
+      // nếu user thì chuyển sang màn hình homescreen
       navigation.replace('HomeScreen');
     }
     if (user === null) {
+      // ngược lại chuyển sang màn hinh lỗi
       navigation.replace('ErrorScanScreen');
     }
   }, [user, tempUid]);

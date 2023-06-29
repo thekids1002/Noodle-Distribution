@@ -12,6 +12,7 @@ const store = configureStore({
   reducer: {
     user: userSlice,
   },
+  middleware,
 });
 
 export type RootState = ReturnType<typeof store.getState>;

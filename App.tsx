@@ -10,8 +10,6 @@ import store from './src/app/store';
 
 const App = () => {
   return <RootStackNavigation />;
-
-  // return <OutOfNoddlesScreen />;
 };
 
 export default App;

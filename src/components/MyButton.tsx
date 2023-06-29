@@ -2,7 +2,6 @@
 import React from 'react';
 import {TouchableOpacity, Image, Text, Alert} from 'react-native';
 import {useDispatch} from 'react-redux';
-import {setNumberNoodle} from '../features/user/userSlice';
 import {NavigationProp} from '@react-navigation/native';
 import Constants from '../ultils/Constants';
 
@@ -24,6 +23,7 @@ const MyButton: React.FC<ButtonWithTextProps> = ({onPress, text}) => {
       />
       <Text
         style={{
+          fontFamily: 'Nexa-Rust',
           position: 'absolute',
           alignSelf: 'center',
           top: '50%',
@@ -31,7 +31,6 @@ const MyButton: React.FC<ButtonWithTextProps> = ({onPress, text}) => {
           color: '#A31616',
           fontSize: 18,
           fontWeight: 'bold',
-          fontFamily: 'PaytoneOne',
         }}>
         {text}
       </Text>

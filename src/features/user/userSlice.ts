@@ -24,6 +24,7 @@ const initialState: userState = {
   tempUId: '',
 };
 
+// lấy dữ liệu từ firebase sử dụng createAsyncThunk và trả về 1 User
 export const fetchUser = createAsyncThunk(
   'user/fetchUser',
   async (message: string) => {
@@ -42,8 +43,9 @@ export const fetchUser = createAsyncThunk(
   },
 );
 
-export const setNumberNoodle = createAsyncThunk(
-  'user/setNumberNoodle',
+//  trừ đi ly mì đẫ chọn, sử dụng createAsyncThunk
+export const subNoodle = createAsyncThunk(
+  'user/subNoodle',
   async ({message, numberNoodle}: {message: string; numberNoodle: number}) => {
     await firestore()
       .collection('users')
@@ -52,7 +54,7 @@ export const setNumberNoodle = createAsyncThunk(
         numberNoodle: numberNoodle,
       })
       .then(() => {
-        console.log('User updated!');
+        console.log('SubNoodle success :' + numberNoodle);
       });
   },
 );
@@ -80,13 +82,13 @@ const userSlice = createSlice({
         state.error = action.error.message ?? 'Something went wrong.';
       })
 
-      .addCase(setNumberNoodle.pending, state => {
+      .addCase(subNoodle.pending, state => {
         state.status = 'loading';
       })
-      .addCase(setNumberNoodle.fulfilled, (state, action) => {
+      .addCase(subNoodle.fulfilled, (state, action) => {
         state.status = 'succeeded';
       })
-      .addCase(setNumberNoodle.rejected, (state, action) => {
+      .addCase(subNoodle.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.error.message ?? 'Something went wrong.';
       });

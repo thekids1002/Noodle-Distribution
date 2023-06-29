@@ -43,6 +43,7 @@ const DoneScreen: React.FC<Props> = ({navigation, route}) => {
           resizeMode="contain"
           style={[
             {
+              opacity: 0.75,
               top: '-5%',
               width: 200,
               height: '14%',
