@@ -50,7 +50,13 @@ export const fetchUser = createAsyncThunk(
 //  trừ đi ly mì đẫ chọn, sử dụng createAsyncThunk
 export const subNoodle = createAsyncThunk(
   'user/subNoodle',
-  async ({message, numberNoodle}: {message: string; numberNoodle: number}) => {
+  async ({
+    message,
+    numberNoodleSub,
+  }: {
+    message: string;
+    numberNoodleSub: number;
+  }) => {
     await firestore()
       .collection('users')
       .where('UserID', '==', message)
@@ -58,10 +64,10 @@ export const subNoodle = createAsyncThunk(
       .then(querySnapshot => {
         querySnapshot.forEach(async doc => {
           await firestore().collection('users').doc(doc.id).update({
-            numberNoodle: numberNoodle,
+            numberNoodle: numberNoodleSub,
           });
         });
-        console.log('SubNoodle success :' + numberNoodle);
+        console.log('Noodle After sub success :' + numberNoodleSub);
       });
   },
 );

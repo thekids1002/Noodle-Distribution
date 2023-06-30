@@ -160,7 +160,6 @@ const WelcomeScreen: React.FC<LoginScreenProps> = ({navigation, route}) => {
     }
 
     if (user === null) {
-      console.log('ok');
       // ngược lại chuyển sang màn hinh lỗi
       navigation.replace('ErrorScanScreen');
     }

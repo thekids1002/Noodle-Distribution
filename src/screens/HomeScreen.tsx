@@ -110,6 +110,7 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
           ]}>
           <TouchableOpacity
             activeOpacity={1}
+            disabled={user?.numberNoodle <= 0}
             style={{
               width: 110,
               height: 150,
@@ -135,6 +136,7 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
           </TouchableOpacity>
           <TouchableOpacity
             activeOpacity={1}
+            disabled={user?.numberNoodle <= 1}
             style={{
               width: 110,
               height: 150,
@@ -159,6 +161,7 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
           </TouchableOpacity>
           <TouchableOpacity
             activeOpacity={1}
+            disabled={user?.numberNoodle <= 2} // thêm disbale button
             style={{
               width: 110,
               height: 150,
@@ -228,7 +231,7 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
                 await dispatch(
                   subNoodle({
                     message: user?.UserID,
-                    numberNoodle: user?.numberNoodle - count,
+                    numberNoodleSub: user?.numberNoodle - count, // set lại số lượng ly mì trên firebase
                   }),
                 );
                 navigation.replace('DoneScreens');
