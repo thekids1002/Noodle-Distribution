@@ -26,6 +26,7 @@ import {AppDispatch, RootState} from '../app/store';
 import {fetchUser} from '../features/user/userSlice';
 import {Action, ThunkDispatch} from '@reduxjs/toolkit';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 type LoginScreenProps = {
   navigation: any;
@@ -45,8 +46,8 @@ const WelcomeScreen: React.FC<LoginScreenProps> = ({navigation, route}) => {
   const [path, setPath]: any = useState(false);
   const user = useSelector((state: RootState) => state.user.user);
   const dispatch = useDispatch<ThunkDispatch<RootState, any, Action>>();
-  const [loading, setLoading] = useState(true);
-
+  const [loading, setLoading] = useState(false);
+  const status = useSelector((state: RootState) => state.user.status);
   // lấy dữ liệu từ firebase
   const handleFetchUser = async (userId: string) => {
     await dispatch(fetchUser(userId));
@@ -54,10 +55,17 @@ const WelcomeScreen: React.FC<LoginScreenProps> = ({navigation, route}) => {
 
   // màn hình loading
   const startLoading = async () => {
-    setTimeout(() => {
+    if (status === 'loading') {
+      setLoading(true);
+    }
+    if (status === 'succeeded') {
       setLoading(false);
-    }, 3000);
+    }
   };
+
+  useEffect(() => {
+    startLoading();
+  }, [status]);
 
   const requestCameraPermission = async () => {
     try {
@@ -134,7 +142,8 @@ const WelcomeScreen: React.FC<LoginScreenProps> = ({navigation, route}) => {
         const value = await AsyncStorage.getItem('@storage_Key');
         if (value !== null) {
           // nếu có dữ liệu thì chuyển sang màn hình homescreen
-          navigation.replace('HomeScreen', value);
+
+          await dispatch(fetchUser(value));
         }
       } catch (e) {}
     };
@@ -150,12 +159,12 @@ const WelcomeScreen: React.FC<LoginScreenProps> = ({navigation, route}) => {
         }
       };
 
+      // lưu lại id của user vào store
       if (user.UserID != '') {
         storeData(user.UserID);
-        console.log('storee ok ' + user.UserID);
       }
 
-      // nếu user thì chuyển sang màn hình homescreen
+      // nếu đã lấy được dữ liệu của user thì chuyển sang màn hình homescreen
       navigation.replace('HomeScreen');
     }
 
@@ -200,6 +209,13 @@ const WelcomeScreen: React.FC<LoginScreenProps> = ({navigation, route}) => {
   ).current;
   return (
     <View style={Styles.container}>
+      <Spinner
+        //visibility of Overlay Loading Spinner
+        visible={loading}
+        //Text with the Spinner
+        textContent={'Loading...'}
+        //Text style of the Spinner Text
+      />
       <StatusBar backgroundColor={Colors.BLACK} />
       <Background />
       <HeaderGroup title={'welcome'} />

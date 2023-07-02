@@ -30,6 +30,7 @@ type Props = {
 const HomeScreen: React.FC<Props> = ({navigation, route}) => {
   // lấy user từ trong store
   const user = useSelector((state: RootState) => state.user.user);
+  const status = useSelector((state: RootState) => state.user.status);
   const dispatch = useDispatch<ThunkDispatch<RootState, any, Action>>();
   // cup1 2 3 tương ứng với ly mì 1 2 3
   const [cup1, setcup1] = useState(false);
@@ -37,37 +38,37 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
   const [cup3, setcup3] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  // đọc lại userID AsyncStorage và lấy dữ liệu từ firebase
-  const getUser = async () => {
-    const value = await AsyncStorage.getItem('@storage_Key');
-    if (value) {
-      dispatch(fetchUser(value));
-    }
-  };
+  // // đọc lại userID AsyncStorage và lấy dữ liệu từ firebase
+  // const getUser = async () => {
+  //   const value = await AsyncStorage.getItem('@storage_Key');
+  //   if (value) {
+  //     dispatch(fetchUser(value));
+  //   }
+  // };
 
-  useEffect(() => {
-    getUser();
-  }, []);
+  // useEffect(() => {
+  //   // getUser();
+  // }, []);
 
   // xử lý sự kiện nhấn nút back từ màn hình khác chuyển sang màn hình Home ( go back )
   // get lại thông tin user
   useEffect(() => {
     const unsubcribe = navigation.addListener('focus', async () => {
-      await getUser();
+      await dispatch(fetchUser(user?.UserID));
       await startLoading();
     });
     return unsubcribe;
   }, [navigation]);
 
   const startLoading = async () => {
-    setTimeout(() => {
+    if (status === 'succeeded') {
       setLoading(false);
-    }, 1000);
+    }
   };
 
   useEffect(() => {
     startLoading();
-  }, []);
+  }, [status]);
 
   return (
     <View style={Styles.container}>
