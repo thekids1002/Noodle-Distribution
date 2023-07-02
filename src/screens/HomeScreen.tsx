@@ -192,13 +192,14 @@ const HomeScreen: React.FC<Props> = ({navigation, route}) => {
             alignSelf: 'center',
             fontSize: 10,
             fontWeight: 'bold',
-            marginBottom: 10,
+            marginBottom: 8,
           }}>
           <Text
             style={{
               color: 'red',
-              fontWeight: 'bold',
-              fontSize: 18,
+
+              fontSize: 16,
+              fontFamily: 'paytoneone',
             }}>
             {user?.numberNoodle}
           </Text>

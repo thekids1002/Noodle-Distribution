@@ -248,7 +248,7 @@ const WelcomeScreen: React.FC<LoginScreenProps> = ({navigation, route}) => {
             },
           ]}>
           <Image source={Constants.IC_SCAN} style={styles.iconScan} />
-          <Text style={[FontSizes.h3, styles.bottomTitle]}>
+          <Text style={[FontSizes.h4, styles.bottomTitle]}>
             Follow the arrow to scan card
           </Text>
         </View>
