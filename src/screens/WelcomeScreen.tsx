@@ -302,7 +302,7 @@ const styles = StyleSheet.create({
     height: 35,
   },
   bottomTitle: {
-    fontWeight: 'bold',
+    fontFamily: 'nunito_extraBold',
     color: '#AE0808',
     marginStart: 10,
   },

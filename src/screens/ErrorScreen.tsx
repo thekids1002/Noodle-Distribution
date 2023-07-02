@@ -34,16 +34,19 @@ const ErrorScreen: React.FC<PropsError> = ({navigation, route}) => {
   const dispatch = useDispatch<ThunkDispatch<RootState, any, Action>>();
   const [loading, setLoading] = useState(true);
   const [path, setPath]: any = useState(false);
+  const status = useSelector((state: RootState) => state.user.status);
   const handleFetchUser = async (userId: string) => {
     await dispatch(fetchUser(userId));
   };
 
   const startLoading = async () => {
-    setTimeout(() => {
+    if (status === 'loading') {
+      setLoading(true);
+    }
+    if (status === 'succeeded') {
       setLoading(false);
-    }, 3000);
+    }
   };
-
   const requestCameraPermission = async () => {
     try {
       const granted = await PermissionsAndroid.request(
@@ -107,6 +110,10 @@ const ErrorScreen: React.FC<PropsError> = ({navigation, route}) => {
       console.log('Cannot detect QR code in image', error);
     }
   };
+
+  useEffect(() => {
+    startLoading();
+  }, [status]);
 
   useEffect(() => {
     const getData = async () => {
@@ -181,7 +188,13 @@ const ErrorScreen: React.FC<PropsError> = ({navigation, route}) => {
       <HeaderGroup title={'error'} />
 
       <View style={[Styles.alignItemsCenter, {flex: 1, marginTop: -35}]}>
-        <Text style={[Styles.textWhite, styles.alert]}>
+        <Text
+          style={[
+            Styles.textWhite,
+            styles.alert,
+            FontSizes.h4,
+            {color: '#980000', fontFamily: 'nunito-bold'},
+          ]}>
           Can not recongnize your ID card.
         </Text>
         <TouchableOpacity activeOpacity={0.7} style={styles.button}>
@@ -200,7 +213,12 @@ const ErrorScreen: React.FC<PropsError> = ({navigation, route}) => {
             Styles.justifyContentCenter,
           ]}>
           <Image source={Constants.IC_SCAN} style={styles.iconScan} />
-          <Text style={[FontSizes.h3, styles.bottomTitle]}>
+          <Text
+            style={[
+              FontSizes.h3,
+              styles.bottomTitle,
+              {fontFamily: 'nunito_extraBold'},
+            ]}>
             Follow the arrow to scan card
           </Text>
         </View>
@@ -268,7 +286,7 @@ const styles = StyleSheet.create({
     width: 108,
     height: 140,
     resizeMode: 'center',
-    marginTop: 125,
+    marginTop: 115,
   },
   doubleArrow: {
     width: 68,

@@ -131,6 +131,7 @@ const styles = StyleSheet.create({
     marginBottom: 3.3,
   },
   infomationText: {
+    fontFamily: 'nunito_regular',
     color: '#880B0B',
     marginVertical: 4,
     maxWidth: 95,

@@ -17,14 +17,19 @@ const OutOfNoddlesScreen: React.FC<Props> = ({navigation, route}) => {
       <HeaderGroup title={'OUT OF Noodle'} titleWidth={260} />
 
       <View style={[Styles.alignItemsCenter, {flex: 1}]}>
-        <Text style={[Styles.textOutCup, styles.alert]}>
+        <Text
+          style={[
+            Styles.textOutCup,
+            styles.alert,
+            {
+              fontFamily: 'nunito_extraBold',
+            },
+          ]}>
           There is
           <Text
             style={{
               color: '#ffffff',
               fontSize: 20,
-              fontWeight: '900',
-              fontFamily: 'Nunito-Black',
             }}>
             {' 0 '}
           </Text>
